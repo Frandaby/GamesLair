@@ -1,0 +1,14 @@
+.user-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #22d3ee;
+  margin-right: 15%;
+}
+
+.user-images {
+  width: 100%;
+  filter: drop-shadow(0 0 8px #22d3ee);
+}
