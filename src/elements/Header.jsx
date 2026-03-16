@@ -3,13 +3,20 @@ import Button from "../components/Button.jsx";
 import signUp from "../assets/sign-up.png";
 import logIn from "../assets/log-in.png";
 import logo from "../assets/games-lair-logo.png";
+import { useState } from "react";
 
 function Header() {
+  const [search, setSearch] = useState("");
   const handleSignUp = () => {
     alert("Sign Up");
   };
   const handleLogIn = () => {
     alert("Log In");
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      alert(search);
+    }
   };
   return (
     <>
@@ -23,6 +30,8 @@ function Header() {
             id="search-input"
             type="search"
             placeholder="Buscar juegos..."
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
         <div id="user-buttons">
