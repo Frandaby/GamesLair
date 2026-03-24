@@ -88,4 +88,18 @@ router.get("/oldest-to-newest", async (req, res) => {
   }
 });
 
+router.get("/search", async (req, res) => {
+  try {
+    const query = req.query.query;
+    const response = await fetch(
+      `https://api.rawg.io/api/games?key=${API_KEY}&search=${query}`,
+    );
+    const data = await response.json();
+    res.json(data.results);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+});
+
 module.exports = router;

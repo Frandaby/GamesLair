@@ -5,8 +5,8 @@ import logIn from "../assets/log-in.png";
 import logo from "../assets/games-lair-logo.png";
 import { useState } from "react";
 
-function Header() {
-  const [search, setSearch] = useState("");
+function Header({ setQuery }) {
+  const [search, setSearch] = useState(""); //setSearch cambia el valor de la variable
   const handleSignUp = () => {
     alert("Sign Up");
   };
@@ -15,9 +15,14 @@ function Header() {
   };
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      alert(search);
+      e.preventDefault();
+      setQuery(search);
     }
   };
+
+  //useEffect -> Fetch data from the server (to connect it to it)
+  //useState  -> Allows to change values with interactions of the page and to set starting values of elements in the page.
+
   return (
     <>
       <header id="header">
@@ -27,6 +32,7 @@ function Header() {
         <div id="search-bar">
           <h1>¡Comparte tu frikismo con nuevos amigos!</h1>
           <input
+            value={search}
             id="search-input"
             type="search"
             placeholder="Buscar juegos..."
