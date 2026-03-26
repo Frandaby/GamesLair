@@ -7,7 +7,7 @@
 #user-buttons {
   display: flex;
   justify-content: space-between;
-  width: 150px;
+  width: 200px;
 }
 
 #logo {
@@ -15,7 +15,7 @@
 }
 
 #logo-div {
-  width: 250px;
+  width: 300px;
   display: flex;
   justify-content: center;
 }
@@ -35,7 +35,9 @@
   background-color: #050816;
   color: #eaeaff;
   border: 1px solid #22d3ee;
-  border-radius: 20px;
+  border-radius: 30px;
   width: 50%;
   padding: 2%;
+  font-family: "Science Gothic", sans-serif;
+  font-size: larger;
 }
