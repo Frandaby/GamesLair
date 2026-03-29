@@ -36,49 +36,31 @@ router.get("/details", async (req, res) => {
 
 //INCLUIR MEJOR/PEOR Y PEOR/MEJOR CON NOTAS DE USUARIOS CUANDO TENGA LA BBDD.
 
-router.get("/best-to-worst", async (req, res) => {
+router.get("/order", async (req, res) => {
   try {
+    const order = req.query.order;
+    let selectedOrder;
+    const orderConfiguration = {
+      "best-to-worst": {
+        ordering: "-metacritic",
+        filter: "&metacritic=1,100",
+      },
+      "worst-to-best": {
+        ordering: "metacritic",
+        filter: "&metacritic=1,100",
+      },
+      "newest-to-oldest": {
+        ordering: "-released",
+        filter: "&dates=1958-10-18,3000-02-22",
+      },
+      "oldest-to-newest": {
+        ordering: "released",
+        filter: "&dates=1958-10-18,3000-02-22",
+      },
+    };
+    selectedOrder = orderConfiguration[order];
     const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&metacritic=1,100&ordering=-metacritic&page=${page}`,
-    );
-    const data = await response.json();
-    res.json(data.results);
-  } catch (error) {
-    console.error(error);
-    res.status(500);
-  }
-});
-
-router.get("/worst-to-best", async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&metacritic=1,100&ordering=metacritic&page=${page}`,
-    );
-    const data = await response.json();
-    res.json(data.results);
-  } catch (error) {
-    console.error(error);
-    res.status(500);
-  }
-});
-
-router.get("/newest-to-oldest", async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&dates=1958-10-18,3000-02-22&ordering=-released&page=${page}`,
-    );
-    const data = await response.json();
-    res.json(data.results);
-  } catch (error) {
-    console.error(error);
-    res.status(500);
-  }
-});
-
-router.get("/oldest-to-newest", async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&dates=1958-10-18,3000-02-22&ordering=released&page=${page}`,
+      `https://api.rawg.io/api/games?key=${API_KEY}${selectedOrder.filter}&ordering=${selectedOrder.ordering}&page=${page}`,
     );
     const data = await response.json();
     res.json(data.results);
@@ -93,6 +75,65 @@ router.get("/search", async (req, res) => {
     const query = req.query.query;
     const response = await fetch(
       `https://api.rawg.io/api/games?key=${API_KEY}&search=${query}`,
+    );
+    const data = await response.json();
+    res.json(data.results);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+});
+
+router.get("/genres", async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://api.rawg.io/api/genres?key=${API_KEY}&ordering=name`,
+    );
+    const data = await response.json();
+    const genres = data.results.map((genre) => ({
+      id: genre.id,
+      name: genre.name,
+    }));
+
+    res.json(genres);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+});
+
+router.get("/platforms", async (req, res) => {
+  try {
+    const response = await fetch(
+      `https://api.rawg.io/api/platforms?key=${API_KEY}&ordering=-games_count`,
+    );
+    const data = await response.json();
+    const platforms = data.results.map((platform) => ({
+      id: platform.id,
+      name: platform.name,
+    }));
+
+    res.json(platforms);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+});
+
+router.get("/filter", async (req, res) => {
+  try {
+    const genre = req.query.genre;
+    const platform = req.query.platform;
+    let genreQuery = "";
+    let platformQuery = "";
+    if (genre && genre !== "999") {
+      genreQuery = `&genres=${genre}`;
+    }
+    if (platform && platform !== "999") {
+      platformQuery = `&platforms=${platform}`;
+    }
+    const response = await fetch(
+      `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}&page=${page}`,
     );
     const data = await response.json();
     res.json(data.results);

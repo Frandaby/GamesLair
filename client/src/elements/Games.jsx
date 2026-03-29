@@ -1,40 +1,114 @@
 import "../css/Games.css";
+import { useState, useEffect } from "react";
 
-function Games({ games }) {
+function Games({ games, setOrder, setGenre, setPlatform }) {
+  const [platforms, setPlatforms] = useState([]);
+  const [genres, setGenres] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/genres")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        data.unshift({ id: "999", name: "-----" });
+        setGenres(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    fetch("http://localhost:5000/api/platforms")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        data.unshift({ id: "999", name: "-----" });
+        setPlatforms(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  const ordersArray = [
+    {
+      value: "elige-una-opcion",
+      text: "Elige una opción...",
+    },
+    {
+      value: "best-to-worst",
+      text: "Mejor valorados",
+    },
+    {
+      value: "worst-to-best",
+      text: "Peor valorados",
+    },
+    {
+      value: "newest-to-oldest",
+      text: "Más recientes",
+    },
+    {
+      value: "oldest-to-newest",
+      text: "Más antiguos",
+    },
+  ];
+  const handleOrder = (e) => {
+    const orderValue = e.target.value;
+    console.log(orderValue);
+    setOrder(orderValue);
+  };
+  const handleGenre = (e) => {
+    const genreValue = e.target.value;
+    setGenre(genreValue);
+  };
+  const handlePlatform = (e) => {
+    const platformValue = e.target.value;
+    setPlatform(platformValue);
+  };
   return (
     <>
       <div class="main-page">
         <div id="filter-container">
           <div class="filters">
-            <label for="order"></label>
-            <select class="filter-input" name="order">
-              <option value="mejor-valorados">Mejor valorados</option>
-              <option value="peor-valorados">Peor valorados</option>
-              <option value="mas-recientes">Más recientes</option>
-              <option value="mas-antiguos">Más antiguos</option>
+            <label class="filter-label" for="order">
+              Ordernar por:
+            </label>
+            <select onChange={handleOrder} class="filter-input" name="order">
+              {ordersArray.map((order) => (
+                <option value={order.value}>{order.text}</option>
+              ))}
             </select>
           </div>
           <div class="filters">
-            <label for="genre"></label>
-            <select class="filter-input" name="genre">
-              <option value="accion">Acción</option>
-              <option value="plataformas">Plataformas</option>
-              <option value="rpg">RPG</option>
+            <label class="filter-label" for="genre">
+              Género:
+            </label>
+            <select onChange={handleGenre} class="filter-input" name="genre">
+              {genres.map((genre) => (
+                <option value={genre.id}>{genre.name}</option>
+              ))}
             </select>
           </div>
           <div class="filters">
-            <label for="platform"></label>
-            <select class="filter-input" name="platform">
-              <option value="playstation-5">Playstation 5</option>
-              <option value="switch">Switch</option>
-              <option value="xbox-series-x">Xbox series X</option>
+            <label class="filter-label" for="platform">
+              Plataforma:
+            </label>
+            <select
+              onChange={handlePlatform}
+              class="filter-input"
+              name="platform"
+            >
+              {platforms.map((platform) => (
+                <option value={platform.id}>{platform.name}</option>
+              ))}
             </select>
           </div>
         </div>
         <div class="games">
           {games.map((game) => (
             <div class="game-card">
-              <h2 class="game-name">{game.name}</h2>
+              <div class="game-name-div">
+                <h2 class="game-name">{game.name}</h2>
+              </div>
               <img class="game-image" src={game.background_image} />
               <div class="game-details">
                 <p class="details-text">
