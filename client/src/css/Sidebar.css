@@ -1,0 +1,32 @@
+#sidebar {
+  width: 15%;
+  background: linear-gradient(90deg, #1a0033, #150348);
+  color: white;
+  font-size: larger;
+  min-height: 100vh;
+}
+
+#nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 67%;
+  width: 15%;
+  position: fixed;
+  padding-left: 0;
+}
+
+.nav-element {
+  border: 2px solid #22d3ee;
+  margin: 0 9% 20% 9%;
+  border-radius: 100px;
+  text-align: center;
+  padding: 5% 0;
+}
+
+.nav-element:hover {
+  cursor: pointer;
+  background-color: #22d3ee;
+  color: #050816;
+}

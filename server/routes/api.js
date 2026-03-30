@@ -9,7 +9,7 @@ let page = 1;
 router.get("/all", async (req, res) => {
   try {
     const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&creators=shigeru-miyamoto&page=${page}`,
+      `https://api.rawg.io/api/games?key=${API_KEY}&page=${page}`,
     );
     const data = await response.json();
     res.json(data.results);
@@ -36,31 +36,69 @@ router.get("/details", async (req, res) => {
 
 //INCLUIR MEJOR/PEOR Y PEOR/MEJOR CON NOTAS DE USUARIOS CUANDO TENGA LA BBDD.
 
-router.get("/order", async (req, res) => {
+/* router.get("/filter", async (req, res) => {
   try {
-    const order = req.query.order;
+    const genre = req.query.genre;
+    const platform = req.query.platform;
+    let genreQuery = "";
+    let platformQuery = "";
+    if (genre && genre !== "999") {
+      genreQuery = `&genres=${genre}`;
+    }
+    if (platform && platform !== "999") {
+      platformQuery = `&platforms=${platform}`;
+    }
+    const response = await fetch(
+      `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}&page=${page}`,
+    );
+    const data = await response.json();
+    res.json(data.results);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+}); */
+
+router.get("/order-filter", async (req, res) => {
+  try {
+    const genre = req.query.genre || "";
+    const platform = req.query.platform || "";
+    const order = req.query.order || "";
     let selectedOrder;
+    let genreQuery = "";
+    let platformQuery = "";
+
     const orderConfiguration = {
+      "elige-una-opcion": {
+        ordering: "",
+        filter: "",
+      },
       "best-to-worst": {
-        ordering: "-metacritic",
+        ordering: "&ordering=-metacritic",
         filter: "&metacritic=1,100",
       },
       "worst-to-best": {
-        ordering: "metacritic",
+        ordering: "&ordering=metacritic",
         filter: "&metacritic=1,100",
       },
       "newest-to-oldest": {
-        ordering: "-released",
+        ordering: "&ordering=-released",
         filter: "&dates=1958-10-18,3000-02-22",
       },
       "oldest-to-newest": {
-        ordering: "released",
+        ordering: "&ordering=released",
         filter: "&dates=1958-10-18,3000-02-22",
       },
     };
-    selectedOrder = orderConfiguration[order];
+    selectedOrder = orderConfiguration[order] || {};
+    if (genre && genre !== "999") {
+      genreQuery = `&genres=${genre}`;
+    }
+    if (platform && platform !== "999") {
+      platformQuery = `&platforms=${platform}`;
+    }
     const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}${selectedOrder.filter}&ordering=${selectedOrder.ordering}&page=${page}`,
+      `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}${selectedOrder.filter}${selectedOrder.ordering}&page=${page}`,
     );
     const data = await response.json();
     res.json(data.results);

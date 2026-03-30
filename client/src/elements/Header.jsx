@@ -4,8 +4,10 @@ import signUp from "../assets/sign-up.png";
 import logIn from "../assets/log-in.png";
 import logo from "../assets/games-lair-logo.png";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header({ setQuery }) {
+  const navigate = useNavigate();
   const [search, setSearch] = useState(""); //setSearch cambia el valor de la variable
   const handleSignUp = () => {
     alert("Sign Up");
@@ -27,7 +29,13 @@ function Header({ setQuery }) {
     <>
       <header id="header">
         <div id="logo-div">
-          <img id="logo" src={logo} />
+          <img
+            id="logo"
+            src={logo}
+            onClick={() => {
+              navigate("/");
+            }}
+          />
         </div>
         <div id="search-bar">
           <h1>¡Comparte tu frikismo con nuevos amigos!</h1>

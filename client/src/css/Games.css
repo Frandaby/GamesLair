@@ -12,15 +12,20 @@
   color: white;
 }
 
+.game-card:hover {
+  filter: drop-shadow(0 0 13px white);
+}
+
 .games {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 0 10%;
+  margin: 0 6%;
 }
 
-.main-page {
+#main-page {
   background-color: #020617;
+  width: 85%;
 }
 
 .game-image {
@@ -37,11 +42,12 @@
 
 .game-name {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
-  overflow: hidden;
   text-overflow: ellipsis;
+  padding: 4%;
+  margin-bottom: 0;
 }
 
 .details-bold {
@@ -64,6 +70,7 @@
   font-family: "Science Gothic", sans-serif;
   font-size: larger;
   border-radius: 100px;
+  border: none;
   width: 50%;
   padding: 1% 0;
   margin: 5%;
@@ -71,8 +78,8 @@
 
 .game-button:hover {
   cursor: pointer;
-  background-color: #0e6b79;
-  color: white;
+  background-color: #e879f9;
+  border: none;
 }
 
 #filter-container {
@@ -100,6 +107,12 @@
   text-align: center;
   min-width: fit-content;
   height: 60%;
+}
+
+.filter-input:hover {
+  cursor: pointer;
+  background-color: #22d3ee;
+  color: #050816;
 }
 
 .filter-label {

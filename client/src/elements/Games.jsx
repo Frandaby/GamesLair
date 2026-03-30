@@ -1,9 +1,13 @@
 import "../css/Games.css";
 import { useState, useEffect } from "react";
 
-function Games({ games, setOrder, setGenre, setPlatform }) {
+function Games({ query }) {
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [games, setGames] = useState([]);
+  const [order, setOrder] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [genre, setGenre] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:5000/api/genres")
@@ -28,7 +32,28 @@ function Games({ games, setOrder, setGenre, setPlatform }) {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+    let endpoint = "";
+    if (query) {
+      endpoint = `http://localhost:5000/api/search?query=${query}`;
+    } else if (order || platform || genre) {
+      endpoint = `http://localhost:5000/api/order-filter?platform=${platform}&genre=${genre}&order=${order}`;
+    } else {
+      endpoint = "http://localhost:5000/api/all";
+    }
+
+    fetch(endpoint)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setGames(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [query, order, platform, genre]);
+
   const ordersArray = [
     {
       value: "elige-una-opcion",
@@ -51,6 +76,7 @@ function Games({ games, setOrder, setGenre, setPlatform }) {
       text: "Más antiguos",
     },
   ];
+  // TO DO: Simplify these functions into one:
   const handleOrder = (e) => {
     const orderValue = e.target.value;
     console.log(orderValue);
@@ -66,7 +92,7 @@ function Games({ games, setOrder, setGenre, setPlatform }) {
   };
   return (
     <>
-      <div class="main-page">
+      <div id="main-page">
         <div id="filter-container">
           <div class="filters">
             <label class="filter-label" for="order">

@@ -1,5 +1,8 @@
 #header {
   display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   justify-content: space-between;
   background: linear-gradient(90deg, #1a0033, #0a0a7a, #1a0033);
 }
@@ -12,6 +15,10 @@
 
 #logo {
   width: 100%;
+}
+
+#logo:hover {
+  cursor: pointer;
 }
 
 #logo-div {
@@ -40,4 +47,8 @@
   padding: 2%;
   font-family: "Science Gothic", sans-serif;
   font-size: larger;
+}
+
+#search-input:hover {
+  box-shadow: 0 0 20px #22d3ee;
 }
