@@ -1,13 +1,14 @@
 import "../css/Games.css";
 import { useState, useEffect } from "react";
 
-function Games({ query }) {
+function Games({ query, toggle }) {
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
   const [games, setGames] = useState([]);
   const [order, setOrder] = useState("");
   const [platform, setPlatform] = useState("");
   const [genre, setGenre] = useState("");
+  const [faves, setFaves] = useState({});
 
   useEffect(() => {
     fetch("http://localhost:5000/api/genres")
@@ -79,7 +80,6 @@ function Games({ query }) {
   // TO DO: Simplify these functions into one:
   const handleOrder = (e) => {
     const orderValue = e.target.value;
-    console.log(orderValue);
     setOrder(orderValue);
   };
   const handleGenre = (e) => {
@@ -90,9 +90,15 @@ function Games({ query }) {
     const platformValue = e.target.value;
     setPlatform(platformValue);
   };
+  const handleFav = (fav) => {
+    setFaves((currentState) => ({
+      ...currentState,
+      [fav]: !currentState[fav],
+    }));
+  };
   return (
     <>
-      <div id="main-page">
+      <div id="main-page" class={toggle ? "" : "expanded"}>
         <div id="filter-container">
           <div class="filters">
             <label class="filter-label" for="order">
@@ -147,6 +153,15 @@ function Games({ query }) {
                   {/*La función slice elimina los caracteres no incluidos (en este caso solo deja los 5 primeros, el año) */}
                 </p>
                 <button class="game-button">Ver ficha</button>
+                <i
+                  key={game.id}
+                  onClick={() => handleFav(game.id)}
+                  class={
+                    faves[game.id]
+                      ? "fas fa-heart fas-fa-heart"
+                      : "far fa-heart far-fa-heart"
+                  }
+                ></i>
               </div>
             </div>
           ))}

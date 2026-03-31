@@ -1,5 +1,6 @@
 #sidebar {
   width: 15%;
+  transition: width 0.3s ease;
   background: linear-gradient(90deg, #1a0033, #150348);
   color: white;
   font-size: larger;
@@ -23,10 +24,37 @@
   border-radius: 100px;
   text-align: center;
   padding: 5% 0;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  transition-delay: 0.175s;
 }
 
 .nav-element:hover {
   cursor: pointer;
   background-color: #22d3ee;
   color: #050816;
+}
+
+.fas-fa-angle-double {
+  position: fixed;
+  margin: 1% 0 0 2%;
+  font-size: xx-large;
+  color: #22d3ee;
+  z-index: 99;
+}
+
+.fas-fa-angle-double:hover {
+  cursor: pointer;
+  color: white;
+}
+
+.collapsed {
+  width: 0 !important;
+  transition: width 0.3s ease;
+}
+
+.element-collapsed {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
 }

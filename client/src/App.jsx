@@ -7,15 +7,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   const [query, setQuery] = useState("");
+  const [toggle, setToggle] = useState(true);
 
   return (
     <>
       <Router>
         <Header setQuery={setQuery} />
         <div id="main-body">
-          <Sidebar />
+          <Sidebar toggle={toggle} setToggle={setToggle} />
           <Routes>
-            <Route path="/" element={<Games query={query} />} />
+            <Route path="/" element={<Games query={query} toggle={toggle} />} />
             <Route path="/reviews" element={<p>test</p>} />
             <Route path="/rankings" element={<p>test</p>} />
             <Route path="/favoritos" element={<p>test</p>} />

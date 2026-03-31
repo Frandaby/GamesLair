@@ -1,14 +1,25 @@
 import "../css/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({ toggle, setToggle }) {
   const navigate = useNavigate();
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
   return (
     <>
-      <div id="sidebar">
-        <ul id="nav-list">
+      <div id="sidebar" class={toggle ? "" : "collapsed"}>
+        <i
+          onClick={handleToggle}
+          class={
+            toggle
+              ? "fas fa-angle-double-left fas-fa-angle-double"
+              : "fas fa-angle-double-right fas-fa-angle-double"
+          }
+        ></i>
+        <ul id="nav-list" class={toggle ? "" : "collapsed"}>
           <li
-            class="nav-element"
+            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/reviews");
             }}
@@ -16,7 +27,7 @@ function Sidebar() {
             Reviews
           </li>
           <li
-            class="nav-element"
+            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/rankings");
             }}
@@ -24,7 +35,7 @@ function Sidebar() {
             Rankings
           </li>
           <li
-            class="nav-element"
+            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/favoritos");
             }}
@@ -32,7 +43,7 @@ function Sidebar() {
             Favoritos
           </li>
           <li
-            class="nav-element"
+            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/foro");
             }}

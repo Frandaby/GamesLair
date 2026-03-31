@@ -26,6 +26,12 @@
 #main-page {
   background-color: #020617;
   width: 85%;
+  transition: width 0.3s ease;
+}
+
+.expanded {
+  width: 100% !important;
+  transition: width 0.3s ease;
 }
 
 .game-image {
@@ -120,4 +126,22 @@
   color: #22d3ee;
   padding-bottom: 5%;
   font-size: larger;
+}
+
+.fas-fa-heart {
+  color: red;
+  font-size: larger;
+}
+
+.fas-fa-heart:hover {
+  cursor: pointer;
+}
+
+.far-fa-heart {
+  font-size: larger;
+}
+
+.far-fa-heart:hover {
+  color: red;
+  cursor: pointer;
 }
