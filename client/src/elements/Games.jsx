@@ -1,7 +1,9 @@
 import "../css/Games.css";
 import { useState, useEffect } from "react";
+import { useNavigate, Outlet } from "react-router-dom";
 
-function Games({ query, toggle }) {
+function Games({ query, toggle, setSelectedGame }) {
+  const navigate = useNavigate();
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
   const [games, setGames] = useState([]);
@@ -47,7 +49,6 @@ function Games({ query, toggle }) {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         setGames(data);
       })
       .catch((error) => {
@@ -96,6 +97,18 @@ function Games({ query, toggle }) {
       [fav]: !currentState[fav],
     }));
   };
+
+  const handleSelectedGame = (id, slug) => {
+    fetch(`http://localhost:5000/api/details?id=${id}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setSelectedGame(data);
+        navigate(`/${slug}`);
+      });
+  };
+
   return (
     <>
       <div id="main-page" class={toggle ? "" : "expanded"}>
@@ -152,7 +165,12 @@ function Games({ query, toggle }) {
                   {game.released.slice(0, 4)}{" "}
                   {/*La función slice elimina los caracteres no incluidos (en este caso solo deja los 5 primeros, el año) */}
                 </p>
-                <button class="game-button">Ver ficha</button>
+                <button
+                  onClick={() => handleSelectedGame(game.id, game.slug)}
+                  class="game-button"
+                >
+                  Ver ficha
+                </button>
                 <i
                   key={game.id}
                   onClick={() => handleFav(game.id)}
@@ -167,6 +185,7 @@ function Games({ query, toggle }) {
           ))}
         </div>
       </div>
+      <Outlet />
     </>
   );
 }

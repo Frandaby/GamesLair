@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 const API_KEY = process.env.API_KEY;
-let id = "292842";
 let page = 1;
 
 //Para contactar con la API utilizaremos el método HTTP GET. Esta es la ruta que se usará.
@@ -21,6 +20,7 @@ router.get("/all", async (req, res) => {
 
 router.get("/details", async (req, res) => {
   try {
+    const id = req.query.id;
     const response = await fetch(
       `https://api.rawg.io/api/games/${id}?key=${API_KEY}`,
     );
@@ -36,34 +36,11 @@ router.get("/details", async (req, res) => {
 
 //INCLUIR MEJOR/PEOR Y PEOR/MEJOR CON NOTAS DE USUARIOS CUANDO TENGA LA BBDD.
 
-/* router.get("/filter", async (req, res) => {
+router.get("/order-filter", async (req, res) => {
   try {
     const genre = req.query.genre;
     const platform = req.query.platform;
-    let genreQuery = "";
-    let platformQuery = "";
-    if (genre && genre !== "999") {
-      genreQuery = `&genres=${genre}`;
-    }
-    if (platform && platform !== "999") {
-      platformQuery = `&platforms=${platform}`;
-    }
-    const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}&page=${page}`,
-    );
-    const data = await response.json();
-    res.json(data.results);
-  } catch (error) {
-    console.error(error);
-    res.status(500);
-  }
-}); */
-
-router.get("/order-filter", async (req, res) => {
-  try {
-    const genre = req.query.genre || "";
-    const platform = req.query.platform || "";
-    const order = req.query.order || "";
+    const order = req.query.order;
     let selectedOrder;
     let genreQuery = "";
     let platformQuery = "";
@@ -90,16 +67,15 @@ router.get("/order-filter", async (req, res) => {
         filter: "&dates=1958-10-18,3000-02-22",
       },
     };
-    selectedOrder = orderConfiguration[order] || {};
+    selectedOrder = orderConfiguration[order] || { ordering: "", filter: "" };
     if (genre && genre !== "999") {
       genreQuery = `&genres=${genre}`;
     }
     if (platform && platform !== "999") {
       platformQuery = `&platforms=${platform}`;
     }
-    const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}${selectedOrder.filter}${selectedOrder.ordering}&page=${page}`,
-    );
+    const endpoint = `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}${selectedOrder.filter}${selectedOrder.ordering}&page=${page}`;
+    const response = await fetch(endpoint);
     const data = await response.json();
     res.json(data.results);
   } catch (error) {
