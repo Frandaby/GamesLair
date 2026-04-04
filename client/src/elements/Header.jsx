@@ -4,22 +4,27 @@ import signUp from "../assets/sign-up.png";
 import logIn from "../assets/log-in.png";
 import logo from "../assets/games-lair-logo.png";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function Header({ setQuery }) {
+function Header({ setQuery, loggedIn, setLoggedIn }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [search, setSearch] = useState(""); //setSearch cambia el valor de la variable
-  const handleSignUp = () => {
-    alert("Sign Up");
+  const handleRegistration = (type) => {
+    navigate(`/${type}`);
   };
-  const handleLogIn = () => {
-    alert("Log In");
-  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       setQuery(search);
     }
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    navigate("/");
   };
 
   //useEffect -> Fetch data from the server (to connect it to it)
@@ -33,7 +38,11 @@ function Header({ setQuery }) {
             id="logo"
             src={logo}
             onClick={() => {
-              navigate("/");
+              if (location.pathname == "/") {
+                window.location.reload();
+              } else {
+                navigate("/");
+              }
             }}
           />
         </div>
@@ -48,11 +57,30 @@ function Header({ setQuery }) {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div id="user-buttons">
-          <Button text="Sign up" image={signUp} onClick={handleSignUp} />
-          {/*En React escribimos los parámetros dentro de la etiqueta*/}
-          <Button text="Log in" image={logIn} onClick={handleLogIn} />
-        </div>
+        {!loggedIn && (
+          <div id="user-buttons">
+            <Button
+              text="Sign up"
+              image={signUp}
+              onClick={() => handleRegistration("sign-up")}
+            />
+            {/*En React escribimos los parámetros dentro de la etiqueta*/}
+            <Button
+              text="Log in"
+              image={logIn}
+              onClick={() => handleRegistration("log-in")}
+            />
+          </div>
+        )}
+        {loggedIn && (
+          <div id="log-out-button">
+            <Button
+              text="Log out"
+              image={logIn}
+              onClick={() => handleLogOut()}
+            />
+          </div>
+        )}
       </header>
     </>
   );

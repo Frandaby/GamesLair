@@ -2,7 +2,7 @@ import "../css/Games.css";
 import { useState, useEffect } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 
-function Games({ query, toggle, setSelectedGame }) {
+function Games({ query, toggle, setSelectedGame, loggedIn }) {
   const navigate = useNavigate();
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
@@ -92,10 +92,14 @@ function Games({ query, toggle, setSelectedGame }) {
     setPlatform(platformValue);
   };
   const handleFav = (fav) => {
-    setFaves((currentState) => ({
-      ...currentState,
-      [fav]: !currentState[fav],
-    }));
+    if (loggedIn) {
+      setFaves((currentState) => ({
+        ...currentState,
+        [fav]: !currentState[fav],
+      }));
+    } else {
+      navigate("/log-in");
+    }
   };
 
   const handleSelectedGame = (id, slug) => {
