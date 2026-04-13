@@ -1,10 +1,11 @@
+//Archivo con todo lo relacionado con request y response de la API utilizada
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 const API_KEY = process.env.API_KEY;
 let page = 1;
 
-//Para contactar con la API utilizaremos el método HTTP GET. Esta es la ruta que se usará.
+//Esta ruta se utilizará cuando queramos volver a la página principal.
 router.get("/all", async (req, res) => {
   try {
     const response = await fetch(
@@ -32,9 +33,7 @@ router.get("/details", async (req, res) => {
   }
 });
 
-//Rutas para ordenar los videojuegos mejor a peor, peor/mejor, más nuevo/más viejo y más viejo/más nuevo.
-
-//INCLUIR MEJOR/PEOR Y PEOR/MEJOR CON NOTAS DE USUARIOS CUANDO TENGA LA BBDD.
+//Endpoint para ordenar los videojuegos mejor a peor, peor/mejor, más nuevo/más viejo y más viejo/más nuevo.
 
 router.get("/order-filter", async (req, res) => {
   try {
@@ -67,6 +66,7 @@ router.get("/order-filter", async (req, res) => {
         filter: "&dates=1958-10-18,3000-02-22",
       },
     };
+    //Para que todos los filtros se apliquen a la vez, sin descartar uno al seleccionar otro
     selectedOrder = orderConfiguration[order] || { ordering: "", filter: "" };
     if (genre && genre !== "999") {
       genreQuery = `&genres=${genre}`;
@@ -84,6 +84,7 @@ router.get("/order-filter", async (req, res) => {
   }
 });
 
+//Endpoint para la barra de búsqueda
 router.get("/search", async (req, res) => {
   try {
     const query = req.query.query;
@@ -98,6 +99,7 @@ router.get("/search", async (req, res) => {
   }
 });
 
+//Endpoint para el filtro genres (género)
 router.get("/genres", async (req, res) => {
   try {
     const response = await fetch(
@@ -116,6 +118,7 @@ router.get("/genres", async (req, res) => {
   }
 });
 
+//Endpoint para el filtro platforms (plataforma donde está disponible)
 router.get("/platforms", async (req, res) => {
   try {
     const response = await fetch(
@@ -134,6 +137,7 @@ router.get("/platforms", async (req, res) => {
   }
 });
 
+//Endpoint para que genre y platform se acumulen y no se sustituyan.
 router.get("/filter", async (req, res) => {
   try {
     const genre = req.query.genre;

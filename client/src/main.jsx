@@ -1,3 +1,4 @@
+//Archivo punto de entrada de React, donde lo conectamos con JS, CSS, HTML...
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./css/index.css";

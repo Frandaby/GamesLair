@@ -1,6 +1,8 @@
+//Barra lateral de la página y su funcionalidad
 import "../css/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 
+//Función para crear la barra lateral colapsable
 function Sidebar({ toggle, setToggle }) {
   const navigate = useNavigate();
   const handleToggle = () => {
@@ -40,7 +42,7 @@ function Sidebar({ toggle, setToggle }) {
               navigate("/favoritos");
             }}
           >
-            Favoritos
+            Favourites
           </li>
           <li
             class={`nav-element ${toggle ? "" : "element-collapsed"}`}
@@ -48,7 +50,7 @@ function Sidebar({ toggle, setToggle }) {
               navigate("/foro");
             }}
           >
-            Foro
+            Forum
           </li>
         </ul>
       </div>

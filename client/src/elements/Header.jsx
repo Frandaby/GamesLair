@@ -1,3 +1,4 @@
+//Header de la página y su funcionalidad
 import "../css/Header.css";
 import Button from "../components/Button.jsx";
 import signUp from "../assets/sign-up.png";
@@ -6,7 +7,14 @@ import logo from "../assets/games-lair-logo.png";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-function Header({ setQuery, loggedIn, setLoggedIn }) {
+/*Hooks de React (librerías):
+  useEffect() -> Obtiene data del servidor para conectarlo con el
+  useState() -> Permite cambiar valores con interacciones de la página 
+  e insertar valores iniciales de los elementos.
+  useNavigate() -> Cambia de página o ruta desde el código
+  useLocation() -> Lee información de la URL actual */
+
+function Header({ setQuery, loggedIn, setLoggedIn, setUser }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState(""); //setSearch cambia el valor de la variable
@@ -18,17 +26,20 @@ function Header({ setQuery, loggedIn, setLoggedIn }) {
     if (e.key === "Enter") {
       e.preventDefault();
       setQuery(search);
+      navigate("/");
     }
   };
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
     setLoggedIn(false);
-    navigate("/");
+    setUser({});
+    if (location.pathname == "/") {
+      window.location.reload();
+    } else {
+      navigate("/");
+    }
   };
-
-  //useEffect -> Fetch data from the server (to connect it to it)
-  //useState  -> Allows to change values with interactions of the page and to set starting values of elements in the page.
 
   return (
     <>
@@ -47,12 +58,12 @@ function Header({ setQuery, loggedIn, setLoggedIn }) {
           />
         </div>
         <div id="search-bar">
-          <h1>¡Comparte tu frikismo con nuevos amigos!</h1>
+          <h1>Share your geek side with new friends!</h1>
           <input
             value={search}
             id="search-input"
             type="search"
-            placeholder="Buscar juegos..."
+            placeholder="Search games..."
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={handleKeyDown}
           />

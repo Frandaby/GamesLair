@@ -1,3 +1,4 @@
+//Archivo para exportar todas las características de Button cada vez que lo tengamos que utilizar
 import "../css/Button.css";
 
 function Button({ text, image, onClick }) {

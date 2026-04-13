@@ -1,3 +1,4 @@
+//Archivo para todo lo relacionado con autenticación, contraseñas, token, y encriptación
 const database = require("../database");
 const express = require("express");
 const bcrypt = require("bcrypt");
@@ -6,6 +7,7 @@ const router = express.Router();
 require("dotenv").config();
 const SECRET = process.env.SECRET;
 
+//Para obtener el usuario, a través del email.
 async function getUser(email) {
   const [rows] = await database.execute(
     "SELECT * FROM users WHERE email = ? LIMIT 1",
@@ -14,6 +16,7 @@ async function getUser(email) {
   return rows[0];
 }
 
+//Crear user, pidiendo cuatro parámetros.
 async function createUser(firstName, lastName, email, passwordHash) {
   return await database.execute(
     "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
@@ -21,6 +24,7 @@ async function createUser(firstName, lastName, email, passwordHash) {
   );
 }
 
+//Endpoint para signup, con encriptación
 router.post("/sign-up", async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
@@ -43,6 +47,7 @@ router.post("/log-in", async (req, res) => {
     if (!existingUser) {
       return res.status(401).json({ message: "User could not be found." });
     }
+    //Para comparar password con repeat password
     const doesPasswordMatch = await bcrypt.compare(
       password,
       existingUser.password,
@@ -60,7 +65,11 @@ router.post("/log-in", async (req, res) => {
         expiresIn: "1h",
       },
     );
-    res.status(200).json({ token, message: "User logged in successfully." });
+    res.status(200).json({
+      user: { id: existingUser.id, email: existingUser.email },
+      token,
+      message: "User logged in successfully.",
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

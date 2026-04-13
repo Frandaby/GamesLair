@@ -1,8 +1,9 @@
+//Archivo para todo lo relacionado con el registro de usuario (log in y sign up)
 import "../css/Registration.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function Registration({ setLoggedIn }) {
+function Registration({ setLoggedIn, setUser }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
@@ -39,6 +40,7 @@ function Registration({ setLoggedIn }) {
       if (path == "/log-in" && data.token) {
         localStorage.setItem("token", data.token);
         setLoggedIn(true);
+        setUser({ id: data.user.id, email: data.user.email });
         navigate("/");
       } else if (path == "/log-in" && !data.token) {
         console.log(data.message || data.error);

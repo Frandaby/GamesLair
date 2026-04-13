@@ -1,3 +1,5 @@
+//El documento principal donde añadimos la mayoría de funciones y rutas creadas.
+
 import "./css/App.css";
 import Header from "./elements/Header.jsx";
 import Games from "./elements/Games.jsx";
@@ -13,14 +15,11 @@ function App() {
   const [toggle, setToggle] = useState(true);
   const [selectedGame, setSelectedGame] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     setLoggedIn(!!localStorage.getItem("token"));
   }, []);
-
-  const isAuthenticated = function () {
-    return !!localStorage.getItem("token");
-  };
 
   return (
     <>
@@ -29,6 +28,7 @@ function App() {
           setQuery={setQuery}
           loggedIn={loggedIn}
           setLoggedIn={setLoggedIn}
+          setUser={setUser}
         />
         <div id="main-body">
           <Sidebar toggle={toggle} setToggle={setToggle} />
@@ -37,6 +37,7 @@ function App() {
               path="/"
               element={
                 <Games
+                  user={user}
                   setSelectedGame={setSelectedGame}
                   query={query}
                   toggle={toggle}
@@ -50,11 +51,13 @@ function App() {
               />
               <Route
                 path="/log-in"
-                element={<Registration setLoggedIn={setLoggedIn} />}
+                element={
+                  <Registration setUser={setUser} setLoggedIn={setLoggedIn} />
+                }
               />
               <Route
                 path="/sign-up"
-                element={<Registration setLoggedIn={""} />}
+                element={<Registration setUser={setUser} setLoggedIn={""} />}
               />
             </Route>
             <Route
@@ -67,7 +70,19 @@ function App() {
             />
             <Route
               path="/favoritos"
-              element={loggedIn ? <p>test</p> : <Navigate to="/log-in" />}
+              element={
+                loggedIn ? (
+                  <Games
+                    user={user}
+                    setSelectedGame={setSelectedGame}
+                    query={query}
+                    toggle={toggle}
+                    loggedIn={loggedIn}
+                  />
+                ) : (
+                  <Navigate to="/log-in" />
+                )
+              }
             />
             <Route
               path="/foro"

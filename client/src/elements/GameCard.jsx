@@ -1,3 +1,4 @@
+//Archivo para la ficha individual de cada juego (al pulsar "ver ficha")
 import "../css/GameCard.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -12,6 +13,7 @@ function GameCard({ selectedGame }) {
     4: "pegi_18.png",
     5: "pegi_18.png",
   };
+
   const length = 244;
   const isLong = selectedGame.description_raw.length > length;
   const handleClick = () => {
@@ -70,3 +72,18 @@ function GameCard({ selectedGame }) {
 }
 
 export default GameCard;
+
+{
+  /* Debido a que en América usan ESRB y en Europa PEGI, he descargado imágenes
+     de calificación por edad PEGI y las he relacionado para que salgan según su 
+     correspondiente americano, que es el que usa la API */
+}
+
+{
+  /*Con split resverse join (en h3) ordenaremos la fecha en formato DD/MM/AAAA */
+}
+
+{
+  /* Al llamar a length y usar slice cuando tenga más de 244 caracteres aparecerá "See more" 
+  en vez de todo el texto de golpe*/
+}
