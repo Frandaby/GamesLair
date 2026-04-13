@@ -5,3 +5,4 @@ A añadir:
 -Responsive
 -Mejorar CSS
 -Mejorar o modificar algunas rutas 
+-Añadir tags y puntuación a las game cards
