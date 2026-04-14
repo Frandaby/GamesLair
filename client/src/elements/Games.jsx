@@ -13,10 +13,13 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
   const [order, setOrder] = useState("");
   const [platform, setPlatform] = useState("");
   const [genre, setGenre] = useState("");
-  const [searchedUser, setSearchedUser] = useState(user);
+  const [searchedUser, setSearchedUser] = useState("");
   const [faves, setFaves] = useState({});
 
   useEffect(() => {
+    if (user?.email && !searchedUser) {
+      setSearchedUser(user.email); // Con este endpoint determinamos que el primer usuario que salga por defecto seamos nosotros mismos, aunque luego busquemos al que sea.
+    }
     if (path !== "/favoritos") {
       fetch("http://localhost:5000/api/genres")
         .then((res) => {
@@ -43,8 +46,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
     }
     let endpoint = "";
     if (path === "/favoritos") {
-      endpoint = `http://localhost:5000/data/favourites?email=${searchedUser}`; //Con este endpoint determinamos que
-      // el primer usuario que salga por defecto seamos nosotros mismos, aunque luego busquemos al que sea.
+      endpoint = `http://localhost:5000/data/favourites?email=${searchedUser}`; // searchedUser cambia según lo que busquemos.
     } else if (query) {
       endpoint = `http://localhost:5000/api/search?query=${query}`;
     } else if (order || platform || genre) {
@@ -63,7 +65,24 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
       .catch((error) => {
         console.error(error);
       });
-  }, [path, query, order, platform, genre]);
+
+    fetch(`http://localhost:5000/data/favourites?email=${user.email}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        const favourites = data.reduce((acc, game) => {
+          acc[game.id] = true;
+          return acc;
+        }, {});
+        //Con este fetch siempre veremos los favoritos que tenemos guardado en nuestro usuario, y otros usuarios podrán verlos también cuando busquen nuestro perfil, al permanecer marcados.
+
+        setFaves(favourites);
+      })
+      .catch((error) => {
+        console.error(error);
+      }); // Esto cambia según quién esté logueado
+  }, [searchedUser, user, path, query, order, platform, genre]);
 
   const ordersArray = [
     {
@@ -130,7 +149,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
 
   const handleFav = (fav) => {
     if (loggedIn) {
-      const currentFav = !!faves[fav.id]; // Estado actual de vavourite
+      const currentFav = !!faves[fav.id]; // Estado actual de favourite
       const newFav = !currentFav; // Estado cambiado de favourite
 
       setFaves((current) => ({
@@ -164,9 +183,9 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
   const handleUserSearch = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      setSearchedUser(e.target.value);
     }
   };
-
   return (
     <>
       <div id="main-page" class={toggle ? "" : "expanded"}>
@@ -212,10 +231,8 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
           <div id="user-search-div">
             <input
               id="user-search-input"
-              value={searchedUser}
               type="search"
-              placeholder="Write user's name..."
-              onChange={(e) => setSearchedUser(e.target.value)}
+              placeholder="Write user's email..."
               onKeyDown={handleUserSearch}
             ></input>
           </div>
@@ -226,7 +243,9 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
               <div class="game-name-div">
                 <h2 class="game-name">{game.name}</h2>
               </div>
-              <img class="game-image" src={game.background_image} />
+              {game.background_image && (
+                <img class="game-image" src={game.background_image} />
+              )}
               <div class="game-details">
                 <p class="details-text">
                   <span class="details-bold">Score: </span>
@@ -234,14 +253,16 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
                 </p>
                 <p class="details-text">
                   <span class="details-bold">Release data: </span>
-                  {game.released.slice(0, 4)}{" "}
-                  {/*La función slice elimina los caracteres no incluidos (en este caso solo deja los 5 primeros, el año) */}
+                  {game?.released?.slice(0, 4)}{" "}
+                  {/*La función slice elimina los caracteres no incluidos 
+                  (en este caso solo deja los 5 primeros, el año)
+                  La ? en React actúa del mismo modo que IF NOT EXISTs de MySQL */}
                 </p>
                 <button
                   onClick={() => handleSelectedGame(game.id, game.slug)}
                   class="game-button"
                 >
-                  Game card
+                  Game details
                 </button>
                 <i
                   key={game.id}

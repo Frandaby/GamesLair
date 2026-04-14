@@ -66,7 +66,6 @@ router.get("/order-filter", async (req, res) => {
         filter: "&dates=1958-10-18,3000-02-22",
       },
     };
-    //Para que todos los filtros se apliquen a la vez, sin descartar uno al seleccionar otro
     selectedOrder = orderConfiguration[order] || { ordering: "", filter: "" };
     if (genre && genre !== "999") {
       genreQuery = `&genres=${genre}`;

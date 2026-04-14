@@ -53,8 +53,15 @@ router.get("/favourites", async (req, res) => {
   try {
     const email = req.query.email;
     const favouritesData = await getFavourites(email);
-    console.log(favouritesData);
-    res.status(200).json({ message: "Favourites retrieved successfully." });
+    res.status(200).json(
+      favouritesData.map((game) => ({
+        id: game.api_id,
+        name: game.name,
+        background_image: game.image_url,
+        released: game.release_date,
+        metacritic: game.metacritic_rating,
+      })),
+    );
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

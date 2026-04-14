@@ -15,31 +15,35 @@ function GameCard({ selectedGame }) {
   };
 
   const length = 244;
-  const isLong = selectedGame.description_raw.length > length;
+  const isLong = selectedGame?.description_raw?.length > length;
   const handleClick = () => {
-    navigate("/");
+    navigate(-1); //Con esta funcionalidad React vuelve a la página anterior a la acción sin tener que hacer una ruta.
   };
   return (
     <>
       <div id="overlay" onClick={handleClick}>
         <div id="popup" onClick={(e) => e.stopPropagation()}>
           <div id="image-column">
-            <h2 id="expanded-title">{selectedGame.name}</h2>
-            <img id="expanded-image" src={selectedGame.background_image} />
-            <img
-              id="pegi-image"
-              src={"/" + pegiConfiguration[selectedGame.esrb_rating.id]}
-            />
+            <h2 id="expanded-title">{selectedGame?.name}</h2>
+            {selectedGame?.background_image && (
+              <img id="expanded-image" src={selectedGame?.background_image} />
+            )}
+            {selectedGame?.esrb_rating?.id && (
+              <img
+                id="pegi-image"
+                src={"/" + pegiConfiguration[selectedGame?.esrb_rating?.id]}
+              />
+            )}
           </div>
           <div id="info-column">
             <div id="date">
-              <h3>{selectedGame.released.split("-").reverse().join("-")}</h3>
+              <h3>{selectedGame?.released?.split("-").reverse().join("-")}</h3>
             </div>
             <div class="titles">
               <h3>Genres:</h3>
             </div>
             <div id="genres">
-              {selectedGame.genres.map((genre) => (
+              {selectedGame?.genres?.map((genre) => (
                 <p class="genre-text">{genre.name}</p>
               ))}
             </div>
@@ -49,8 +53,8 @@ function GameCard({ selectedGame }) {
             </div>
             <div id="description-text">
               {more
-                ? selectedGame.description_raw
-                : selectedGame.description_raw.slice(0, length)}
+                ? selectedGame?.description_raw
+                : selectedGame?.description_raw?.slice(0, length)}
               {!more && isLong ? "... " : " "}
               <a id="see-more-less" onClick={() => setMore(!more)} href="#">
                 {more ? "See less" : "See more"}
@@ -60,7 +64,7 @@ function GameCard({ selectedGame }) {
               <h3>Platforms:</h3>
             </div>
             <div id="platforms">
-              {selectedGame.platforms.map((platform) => (
+              {selectedGame?.platforms?.map((platform) => (
                 <p class="platform-text">{platform.platform.name}</p>
               ))}
             </div>
