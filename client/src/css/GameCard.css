@@ -32,7 +32,7 @@
 #info-column {
   padding: 1%;
   width: 45%;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 #expanded-title {
@@ -111,4 +111,53 @@
 
 #see-more-less:visited {
   color: #e879f9;
+}
+
+/*RESPONSIVE (It looks quite good here*/
+@media (max-width: 850px) {
+  #popup {
+    flex-direction: column; /* Apila imagen arriba e info abajo */
+    width: 90%;
+    height: 85%;
+    padding: 5%;
+    overflow-y: auto; /* Permite scroll si el contenido es largo */
+    justify-content: flex-start;
+  }
+  #image-column,
+  #info-column {
+    width: 100%; /* Ocupan todo el ancho */
+  }
+
+  #info-column {
+    overflow: visible; /* El scroll lo manejará el popup padre */
+    padding: 0;
+    margin-top: 20px;
+  }
+
+  #expanded-title {
+    font-size: 1.4rem;
+  }
+  #pegi-image {
+    position: static; /* Deja de flotar sobre la pantalla */
+    width: 60px; /* Tamaño fijo razonable */
+    margin: 20px auto;
+  }
+  #date {
+    text-align: center; /* Centrado en móviles muy pequeños */
+    margin-bottom: 10px;
+  }
+
+  .genre-text,
+  .platform-text {
+    border-right: none; /* Quitamos la barrita vertical */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Ponemos una horizontal */
+    width: 100%;
+    text-align: center;
+    padding: 5px 0 !important;
+  }
+
+  #description-text {
+    font-size: 0.9rem;
+    padding: 5% 0; /* Menos padding lateral */
+  }
 }

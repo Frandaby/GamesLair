@@ -20,7 +20,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
     if (user?.email && !searchedUser) {
       setSearchedUser(user.email); // Con este endpoint determinamos que el primer usuario que salga por defecto seamos nosotros mismos, aunque luego busquemos al que sea.
     }
-    if (path !== "/favoritos") {
+    if (path !== "/favourites") {
       fetch("http://localhost:5000/api/genres")
         .then((res) => {
           return res.json();
@@ -45,7 +45,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
         });
     }
     let endpoint = "";
-    if (path === "/favoritos") {
+    if (path === "/favourites") {
       endpoint = `http://localhost:5000/data/favourites?email=${searchedUser}`; // searchedUser cambia según lo que busquemos.
     } else if (query) {
       endpoint = `http://localhost:5000/api/search?query=${query}`;
@@ -189,7 +189,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
   return (
     <>
       <div id="main-page" class={toggle ? "" : "expanded"}>
-        {path !== "/favoritos" && (
+        {path !== "/favourites" && (
           <div id="filter-container">
             <div class="filters">
               <label class="filter-label" for="order">
@@ -227,7 +227,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
             </div>
           </div>
         )}
-        {path === "/favoritos" && (
+        {path === "/favourites" && (
           <div id="user-search-div">
             <input
               id="user-search-input"

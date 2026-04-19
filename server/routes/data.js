@@ -48,6 +48,39 @@ async function createGame(
   );
   return result;
 }
+
+async function getPosts() {
+  const [rows] = await database.execute(
+    `SELECT p.*, u.email
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    ORDER BY p.created_at DESC;`,
+  );
+  return rows;
+}
+
+async function createPost(userID, post) {
+  const [result] = await database.execute(
+    "INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)",
+    [userID, post.title, post.content],
+  );
+  return result;
+}
+
+async function getComments() {
+  const [rows] = await database.execute(
+    "SELECT replies.*, users.email FROM replies JOIN users ON replies.user_id = users.id;",
+  );
+  return rows;
+}
+
+async function createComment(userID, comment) {
+  const [result] = await database.execute(
+    "INSERT INTO replies (user_id, post_id, content) VALUES (?, ?, ?)",
+    [userID, comment.postID, comment.content],
+  );
+  return result;
+}
 //Ruta para obtener los favoritos
 router.get("/favourites", async (req, res) => {
   try {
@@ -106,5 +139,68 @@ router.delete("/favourites", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get("/forum", async (req, res) => {
+  try {
+    const data = await getPosts();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/forum", async (req, res) => {
+  try {
+    const { data, userID } = req.body;
+    await createPost(userID, data);
+    res.status(200).json({ message: "Post created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/forum/comments", async (req, res) => {
+  try {
+    const data = await getComments();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/forum/comments", async (req, res) => {
+  try {
+    const { data, userID } = req.body;
+    await createComment(userID, data);
+    res.status(200).json({ message: "Comment created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/*//TAGS AND REVIEWS ROUTE
+
+// Obtener todos los tags disponibles para el selector
+router.get("/tags", async (req, res) => {
+  // Aquí harías un SELECT * FROM tags
+  res.json([
+    { id: 1, name: "Nostalgic" },
+    { id: 2, name: "+100 hours" },
+  ]);
+});
+
+// Obtener reviews de un juego específico
+router.get("/reviews/:gameID", async (req, res) => {
+  const { gameID } = req.params;
+  // Lógica para traer reviews + sus tags asociados de la DB
+});
+
+// Postear una review
+router.post("/reviews", async (req, res) => {
+  const { text, score, gameID, userID, tags } = req.body;
+  // 1. Insertar en tabla Reviews
+  // 2. Insertar en Review_Tags para cada tag recibido
+  res.json({ message: "Review created!" });
+});*/
 
 module.exports = router;

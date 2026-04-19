@@ -4,9 +4,10 @@ import "./css/App.css";
 import Header from "./elements/Header.jsx";
 import Games from "./elements/Games.jsx";
 import GameCard from "./elements/GameCard.jsx";
-import { useState, useEffect } from "react";
+import Forum from "./elements/Forum.jsx";
 import Sidebar from "./elements/Sidebar.jsx";
 import Registration from "./components/Registration.jsx";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
@@ -45,9 +46,16 @@ function App() {
                 />
               }
             >
+              {/*user y loggedIn ADDED IN GAMECARD FOR TAGS AND REVIEW */}
               <Route
                 path=":slug"
-                element={<GameCard selectedGame={selectedGame} />}
+                element={
+                  <GameCard
+                    selectedGame={selectedGame}
+                    user={user}
+                    loggedIn={loggedIn}
+                  />
+                }
               />
               <Route
                 path="/log-in"
@@ -69,7 +77,7 @@ function App() {
               element={loggedIn ? <p>test</p> : <Navigate to="/log-in" />}
             />
             <Route
-              path="/favoritos"
+              path="/favourites"
               element={
                 loggedIn ? (
                   <Games
@@ -85,8 +93,10 @@ function App() {
               }
             />
             <Route
-              path="/foro"
-              element={loggedIn ? <p>test</p> : <Navigate to="/log-in" />}
+              path="/forum"
+              element={
+                loggedIn ? <Forum user={user} /> : <Navigate to="/log-in" />
+              }
             />
           </Routes>
         </div>

@@ -167,3 +167,38 @@
 #user-search-input:hover {
   box-shadow: 0 0 20px #22d3ee;
 }
+
+/*RESPONSIVE*/
+/* Para el contenedor principal de juegos */
+@media (max-width: 1024px) {
+  #main-page {
+    width: 100% !important; /* Ignora el 85% cuando el sidebar se mueve */
+  }
+
+  .game-card {
+    width: 45%; /* 2 columnas en tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .game-card {
+    width: 90%; /* 1 columna en móviles */
+    margin: 5% auto;
+  }
+
+  #filter-container {
+    flex-direction: column; /* Los filtros uno debajo de otro */
+    margin: 0 10%;
+  }
+
+  .filters {
+    margin: 10px 0;
+  }
+
+  @media (max-width: 768px) {
+    #main-page {
+      width: 100% !important; /* Siempre pantalla completa en móvil */
+      margin-left: 0 !important;
+    }
+  }
+}

@@ -1,3 +1,11 @@
 #main-body {
   display: flex;
 }
+
+/*Añadido de RESPONSIVE*/
+
+@media (max-width: 768px) {
+  #main-body {
+    flex-direction: column; /* Apila sidebar sobre el contenido */
+  }
+}

@@ -5,10 +5,39 @@
   align-items: center;
   cursor: pointer;
   color: #22d3ee;
-  margin-right: 15%;
+  margin-right: 15px; /* Margen fijo para que no baile */
+  transition: transform 0.2s ease;
+}
+
+.user-buttons:hover {
+  transform: scale(1.05);
+}
+
+.user-buttons p {
+  margin: 5px 0 0 0;
+  font-weight: bold;
 }
 
 .user-images {
-  width: 100%;
+  /* Volvemos al tamaño original de Desktop */
+  width: 80px; /* Ajusta este valor si eran aún más grandes, p.ej. 100px */
   filter: drop-shadow(0 0 8px #22d3ee);
+  transition: width 0.3s ease;
+}
+
+/* --- RESPONSIVE: Solo para móviles --- */
+@media (max-width: 768px) {
+  .user-buttons {
+    margin-right: 10px;
+  }
+
+  .user-images {
+    /* Aquí es donde se hacen pequeños para que quepan en el Header móvil */
+    width: 35px;
+    filter: drop-shadow(0 0 4px #22d3ee);
+  }
+
+  .user-buttons p {
+    font-size: 0.7rem; /* Texto acorde al icono pequeño */
+  }
 }

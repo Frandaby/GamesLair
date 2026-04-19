@@ -1,0 +1,149 @@
+#forum {
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+  padding: 3% 10%;
+  background-color: #020617;
+}
+
+.input-fields {
+  color: white;
+  border-style: solid;
+  border-radius: 20px;
+  border-color: #22d3ee;
+  background-color: #020617;
+  font-family: "Science Gothic", sans-serif;
+  font-size: larger;
+  padding: 2%;
+  margin-bottom: 1%;
+  width: 70%;
+  min-height: 40px;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#post-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-body {
+  border-radius: 20px;
+  filter: drop-shadow(0 0 8px white);
+  background-color: #160243;
+  margin: 2%;
+  color: white;
+}
+
+.post-data {
+  display: flex;
+  padding: 1% 2%;
+  justify-content: space-between;
+}
+
+.post-text {
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+}
+
+.post-content {
+  padding: 0 2%;
+}
+
+.post-title {
+  margin: 0;
+  padding-bottom: 1%;
+  text-align: left;
+}
+
+#title-input {
+  font-size: x-large;
+}
+
+#post-button {
+  background-color: #22d3ee;
+  font-family: "Science Gothic", sans-serif;
+  font-size: larger;
+  border-radius: 20px;
+  border: none;
+  width: 15%;
+  padding: 1%;
+  margin: 1%;
+}
+
+#post-button:hover {
+  cursor: pointer;
+  background-color: #e879f9;
+  border: none;
+}
+
+.comment-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 2%;
+}
+
+.comment-body {
+  margin: 2%;
+  padding: 1% 2%;
+  background-color: #22d3ee;
+  color: black;
+  border-radius: 20px;
+}
+
+.comment-data {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 1%;
+}
+
+.comment-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-input {
+  padding: 0 1%;
+  color: white;
+  border-radius: solid;
+  border-radius: 20px;
+  border-color: #22d3ee;
+  background-color: #020617;
+  font-family: "Science Gothic", sans-serif;
+  font-size: larger;
+  width: 40%;
+  min-height: 40px;
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin-right: 2%;
+}
+
+#comment-button {
+  background-color: #22d3ee;
+  font-family: "Science Gothic", sans-serif;
+  font-size: larger;
+  border-radius: 20px;
+  border: none;
+  width: 15%;
+  padding: 0.7%;
+  margin: 1%;
+}
+
+#comment-button:hover {
+  cursor: pointer;
+  background-color: #e879f9;
+  border: none;
+}
+
+.all-comments {
+  padding-bottom: 0.1%;
+}
+
+p {
+  margin: 0;
+}
