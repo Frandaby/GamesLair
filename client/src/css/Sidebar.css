@@ -61,18 +61,14 @@
 
 /*RESPONSIVE */
 
-/* --- ESTILOS PARA PC (DESKTOP) --- */
-
-/* Forzamos que el icono NO exista en absoluto en pantallas grandes */
 .hamburger-menu {
-  display: none !important; /* El !important asegura que nada lo active en PC */
+  display: none !important;
   visibility: hidden;
 }
 
-/* --- ESTILOS PARA MÓVIL --- */
 @media (max-width: 768px) {
   .hamburger-menu {
-    display: block !important; /* Solo aquí lo hacemos aparecer */
+    display: block !important;
     visibility: visible;
     position: fixed;
     top: 15px;
@@ -84,13 +80,12 @@
     background: #1a0033;
     padding: 10px;
     border-radius: 8px;
-    transition: all 0.3s ease; /* Para que el movimiento de la X sea suave */
+    transition: all 0.3s ease;
   }
 
-  /* Cuando el icono es la X (clase fa-times añadida por React) */
   .hamburger-menu.fa-times {
     color: #e879f9;
-    left: 200px; /* Se mueve con el menú */
+    left: 200px;
     background: transparent;
   }
 
@@ -119,7 +114,7 @@
     width: 100%;
     margin-top: 100px;
     display: flex;
-    flex-direction: column; /* Asegúrate de que los items estén en columna en móvil */
+    flex-direction: column;
   }
 
   .nav-element {

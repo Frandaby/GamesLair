@@ -1,11 +1,18 @@
 //Archivo para la ficha individual de cada juego (al pulsar "ver ficha")
 import "../css/GameCard.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function GameCard({ selectedGame }) {
+function GameCard({ selectedGame, user, loggedIn }) {
   const navigate = useNavigate();
   const [more, setMore] = useState(false);
+  const [tags, setTags] = useState([]);
+  const [reviewData, setReviewData] = useState({
+    text: "",
+    score: 50,
+    tags: [],
+    userID: "",
+  });
   const pegiConfiguration = {
     1: "pegi_7.png",
     2: "pegi_12.png",
@@ -16,8 +23,67 @@ function GameCard({ selectedGame }) {
 
   const length = 244;
   const isLong = selectedGame?.description_raw?.length > length;
+
+  async function postRequest(endpoint, data) {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: data,
+        game: selectedGame,
+      }),
+    });
+    return res.json();
+  }
+
+  useEffect(() => {
+    if (user?.id) {
+      setReviewData((prev) => ({
+        ...prev,
+        userID: user.id,
+      }));
+    }
+
+    fetch("http://localhost:5000/data/tags")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setTags(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
   const handleClick = () => {
     navigate(-1); //Con esta funcionalidad React vuelve a la página anterior a la acción sin tener que hacer una ruta.
+  };
+
+  const handleTag = (tagID) => {
+    setReviewData((prev) => {
+      const isSelected = prev.tags.includes(tagID);
+      return {
+        ...prev,
+        tags: isSelected
+          ? prev.tags.filter((id) => id !== tagID)
+          : [...prev.tags, tagID],
+      };
+    });
+  };
+
+  const handleReview = async (e) => {
+    const endpoint = `http://localhost:5000/data/reviews`;
+    e.preventDefault();
+    const data = await postRequest(endpoint, reviewData);
+    setTimeout(() => {
+      setReviewData({
+        text: "",
+        score: 50,
+        tags: [],
+        userID: user?.id || "",
+      });
+      e.target.reset();
+    }, 300);
   };
   return (
     <>
@@ -67,6 +133,63 @@ function GameCard({ selectedGame }) {
               {selectedGame?.platforms?.map((platform) => (
                 <p class="platform-text">{platform.platform.name}</p>
               ))}
+            </div>
+            <div class="titles">
+              <h3>Reviews:</h3>
+            </div>
+            <div>
+              <form id="review-form" onSubmit={handleReview}>
+                <textarea
+                  id="review-input"
+                  onChange={(e) =>
+                    setReviewData((prev) => ({
+                      ...prev,
+                      text: e.target.value,
+                    }))
+                  }
+                  placeholder="What did you think of the game?"
+                />
+                <div id="review-score">
+                  <label>
+                    Your Score: <strong>{reviewData.score}</strong>/100
+                  </label>
+                  <input
+                    id="score-range"
+                    type="range"
+                    min="1"
+                    max="100"
+                    style={{ "--value": `${reviewData.score}%` }}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setReviewData((prev) => ({
+                        ...prev,
+                        score: Number(value),
+                      }));
+                      e.target.style.setProperty("--value", `${value}%`);
+                    }}
+                  />
+                </div>
+                <div id="tags-div">
+                  {tags.map((tag) => (
+                    <button
+                      key={tag.id}
+                      type="button"
+                      onClick={() => handleTag(tag.id)}
+                      class={
+                        reviewData.tags.includes(tag.id)
+                          ? "tag tag-selected"
+                          : "tag"
+                      }
+                    >
+                      {tag.name}
+                    </button>
+                  ))}
+                </div>
+                <button id="review-button" type="submit">
+                  Post Review
+                </button>
+              </form>
+              <div></div>
             </div>
           </div>
         </div>

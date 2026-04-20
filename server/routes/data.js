@@ -81,6 +81,33 @@ async function createComment(userID, comment) {
   );
   return result;
 }
+
+async function getTags() {
+  const [rows] = await database.execute("SELECT * FROM tags");
+  return rows;
+}
+
+async function createReview(text, score, gameID, userID) {
+  const [result] = await database.execute(
+    "INSERT INTO reviews (user_id, game_id, review_text, score) VALUES (?, ?, ?, ?)",
+    [userID, gameID, text, score],
+  );
+  return result.insertId;
+}
+
+//Con esta funcion relacionamos las tablas reviews y tags en una intermedia review_tags, ya que es relacion N:M
+async function createReviewTags(reviewID, tags) {
+  const placeholders = tags.map(() => "(?, ?)").join(", ");
+  const values = tags.flatMap((tagID) => [reviewID, tagID]);
+
+  const [result] = await database.execute(
+    `INSERT INTO review_tags (review_id, tag_id) VALUES ${placeholders}`,
+    values,
+  );
+
+  return result;
+}
+
 //Ruta para obtener los favoritos
 router.get("/favourites", async (req, res) => {
   try {
@@ -178,29 +205,45 @@ router.post("/forum/comments", async (req, res) => {
   }
 });
 
-/*//TAGS AND REVIEWS ROUTE
-
-// Obtener todos los tags disponibles para el selector
 router.get("/tags", async (req, res) => {
-  // Aquí harías un SELECT * FROM tags
-  res.json([
-    { id: 1, name: "Nostalgic" },
-    { id: 2, name: "+100 hours" },
-  ]);
+  try {
+    const data = await getTags();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// Obtener reviews de un juego específico
-router.get("/reviews/:gameID", async (req, res) => {
-  const { gameID } = req.params;
-  // Lógica para traer reviews + sus tags asociados de la DB
-});
-
-// Postear una review
 router.post("/reviews", async (req, res) => {
-  const { text, score, gameID, userID, tags } = req.body;
-  // 1. Insertar en tabla Reviews
-  // 2. Insertar en Review_Tags para cada tag recibido
-  res.json({ message: "Review created!" });
-});*/
+  try {
+    const { data, game } = req.body;
+    let gameID;
+
+    const existingGame = await getGame(game.id); // Esta propiedad del id viene directamente del API...
+
+    if (existingGame) {
+      gameID = existingGame.id; // ...pero cuando mencionamos id aquí se refiere al campo id de nuestra tabla de nuestra BBDD. Son dos id distintos.
+    } else {
+      const result = await createGame(
+        game.id,
+        game.name,
+        game.background_image,
+        game.released,
+        game.metacritic,
+      );
+      gameID = result.insertId; //Esta propiedad es devuelta por mysql después de crear una entrada en la tabla local (no de la API)
+    }
+    const reviewID = await createReview(
+      data.text,
+      data.score,
+      gameID,
+      data.userID,
+    );
+    await createReviewTags(reviewID, data.tags);
+    await res.status(200).json({ message: "Review created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

@@ -75,12 +75,12 @@
   }
 
   #search-bar h1 {
-    font-size: 1.2rem; /* Texto más pequeño */
+    font-size: 1.2rem;
     text-align: center;
   }
 
   #search-input {
-    width: 80%; /* Más ancho para que sea fácil tocarlo */
+    width: 80%;
   }
 
   #user-buttons {

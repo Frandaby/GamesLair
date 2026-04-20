@@ -84,31 +84,30 @@
 }
 
 /*RESPONSIVE*/
-/* --- RESPONSIVE REGISTRATION --- */
 
 @media (max-width: 1024px) {
   #registration-popup {
-    width: 60%; /* En tablets ocupamos un poco más */
+    width: 60%;
   }
 }
 
 @media (max-width: 768px) {
   #registration-popup {
-    width: 85%; /* En móviles casi todo el ancho */
-    padding: 6% 8%; /* Más espacio interno */
-    height: auto !important; /* Dejamos que el contenido dicte la altura */
-    max-height: 90vh; /* Pero que no se salga de la pantalla */
-    overflow-y: auto; /* Por si el teclado del móvil tapa campos */
+    width: 85%;
+    padding: 6% 8%;
+    height: auto !important;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .form-input {
-    font-size: 1rem; /* Evita que iOS haga zoom automático al enfocar */
+    font-size: 1rem;
     padding: 10px;
-    height: 45px; /* Altura más cómoda para dedos */
+    height: 45px;
   }
 
   #submit-button {
-    width: 80%; /* Botón más grande para pulsar fácil */
+    width: 80%;
     padding: 12px 0;
     margin: 8% 0 5% 0;
   }
