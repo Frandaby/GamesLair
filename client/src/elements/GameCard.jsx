@@ -6,7 +6,9 @@ import { useState, useEffect } from "react";
 function GameCard({ selectedGame, user, loggedIn }) {
   const navigate = useNavigate();
   const [more, setMore] = useState(false);
+  const [hasReview, setHasReview] = useState(false);
   const [tags, setTags] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [reviewData, setReviewData] = useState({
     text: "",
     score: 50,
@@ -36,6 +38,16 @@ function GameCard({ selectedGame, user, loggedIn }) {
     return res.json();
   }
 
+  const getReviews = () => {
+    fetch(`http://localhost:5000/data/reviews?gameID=${selectedGame.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data);
+        setHasReview(data.some((review) => review.user_id === user?.id));
+      })
+      .catch((error) => console.error(error));
+  };
+
   useEffect(() => {
     if (user?.id) {
       setReviewData((prev) => ({
@@ -54,7 +66,10 @@ function GameCard({ selectedGame, user, loggedIn }) {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+
+    getReviews();
+  }, [selectedGame.id]);
+
   const handleClick = () => {
     navigate(-1); //Con esta funcionalidad React vuelve a la página anterior a la acción sin tener que hacer una ruta.
   };
@@ -84,6 +99,7 @@ function GameCard({ selectedGame, user, loggedIn }) {
       });
       e.target.reset();
     }, 300);
+    getReviews();
   };
   return (
     <>
@@ -134,63 +150,98 @@ function GameCard({ selectedGame, user, loggedIn }) {
                 <p class="platform-text">{platform.platform.name}</p>
               ))}
             </div>
-            <div class="titles">
-              <h3>Reviews:</h3>
-            </div>
-            <div>
-              <form id="review-form" onSubmit={handleReview}>
-                <textarea
-                  id="review-input"
-                  onChange={(e) =>
-                    setReviewData((prev) => ({
-                      ...prev,
-                      text: e.target.value,
-                    }))
-                  }
-                  placeholder="What did you think of the game?"
-                />
-                <div id="review-score">
-                  <label>
-                    Your Score: <strong>{reviewData.score}</strong>/100
-                  </label>
-                  <input
-                    id="score-range"
-                    type="range"
-                    min="1"
-                    max="100"
-                    style={{ "--value": `${reviewData.score}%` }}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setReviewData((prev) => ({
-                        ...prev,
-                        score: Number(value),
-                      }));
-                      e.target.style.setProperty("--value", `${value}%`);
-                    }}
-                  />
-                </div>
-                <div id="tags-div">
-                  {tags.map((tag) => (
-                    <button
-                      key={tag.id}
-                      type="button"
-                      onClick={() => handleTag(tag.id)}
-                      class={
-                        reviewData.tags.includes(tag.id)
-                          ? "tag tag-selected"
-                          : "tag"
+            {loggedIn && !hasReview && (
+              <div class="titles">
+                <h3>Write a review:</h3>
+              </div>
+            )}
+            {loggedIn && (
+              <div>
+                {!hasReview && (
+                  <form id="review-form" onSubmit={handleReview}>
+                    <textarea
+                      id="review-input"
+                      onChange={(e) =>
+                        setReviewData((prev) => ({
+                          ...prev,
+                          text: e.target.value,
+                        }))
                       }
-                    >
-                      {tag.name}
+                      placeholder="What did you think of the game?"
+                    />
+                    <div id="review-score">
+                      <label>
+                        Your Score: <strong>{reviewData.score}</strong>/100
+                      </label>
+                      <input
+                        id="score-range"
+                        type="range"
+                        min="1"
+                        max="100"
+                        style={{ "--value": `${reviewData.score}%` }}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setReviewData((prev) => ({
+                            ...prev,
+                            score: Number(value),
+                          }));
+                          e.target.style.setProperty("--value", `${value}%`);
+                        }}
+                      />
+                    </div>
+                    <div id="tags-div">
+                      {tags.map((tag) => (
+                        <button
+                          key={tag.id}
+                          type="button"
+                          onClick={() => handleTag(tag.id)}
+                          class={
+                            reviewData.tags.includes(tag.id)
+                              ? "tag tag-selected"
+                              : "tag"
+                          }
+                        >
+                          {tag.name}
+                        </button>
+                      ))}
+                    </div>
+                    <button id="review-button" type="submit">
+                      Post Review
                     </button>
-                  ))}
-                </div>
-                <button id="review-button" type="submit">
-                  Post Review
-                </button>
-              </form>
-              <div></div>
-            </div>
+                  </form>
+                )}
+                {reviews.length > 0 && (
+                  <div class="titles">
+                    <h3>Reviews:</h3>
+                  </div>
+                )}
+                {reviews.length > 0 && (
+                  <div>
+                    {reviews.map((review) => (
+                      <div class="review-body">
+                        <div class="review-data">
+                          <p>{review.email}</p>
+                          <p>
+                            {review?.created_at
+                              ?.slice(0, 10)
+                              .split("-")
+                              .reverse()
+                              .join("-") +
+                              " at " +
+                              review?.created_at
+                                ?.slice(11, 19)
+                                .split("-")
+                                .reverse()
+                                .join("-")}
+                          </p>
+                        </div>
+                        <p class="review-text">{review.review_text}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

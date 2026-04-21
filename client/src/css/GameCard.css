@@ -52,12 +52,14 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 1.5%;
 }
 
 #platforms {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: 1.5%;
 }
 
 #date {
@@ -114,7 +116,7 @@
 }
 
 #review-form {
-  padding: 5%;
+  padding: 5% 5% 0 5%;
   display: flex;
   flex-direction: column;
 }
@@ -186,7 +188,6 @@
   cursor: pointer;
   background-color: #22d3ee;
   color: black;
-  border: none;
 }
 
 #review-button {
@@ -205,6 +206,26 @@
   cursor: pointer;
   background-color: #e879f9;
   border: none;
+}
+
+.review-data {
+  display: flex;
+  justify-content: space-between;
+  font-style: italic;
+  padding: 1%;
+}
+
+.review-text {
+  font-size: large;
+  padding: 1% 5%;
+}
+
+.review-body {
+  margin: 3% 0;
+  background-color: #020617;
+  padding: 1%;
+  border-radius: 10px;
+  border: 2px solid #22d3ee;
 }
 
 /*RESPONSIVE*/

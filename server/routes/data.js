@@ -3,6 +3,14 @@ const database = require("../database");
 const express = require("express");
 const router = express.Router();
 
+async function getFavourites(email) {
+  const [rows] = await database.execute(
+    "SELECT g.* FROM favourites f JOIN users u ON f.user_id = u.id JOIN games g ON f.game_id = g.id WHERE u.email = ?",
+    [email],
+  );
+  return rows;
+}
+
 async function createFavourite(userID, gameID) {
   const [result] = await database.execute(
     "INSERT IGNORE INTO favourites (user_id, game_id) VALUES (?, ?)",
@@ -17,14 +25,6 @@ async function deleteFavourite(userID, gameID) {
     [userID, gameID],
   );
   return result;
-}
-
-async function getFavourites(email) {
-  const [rows] = await database.execute(
-    "SELECT g.* FROM favourites f JOIN users u ON f.user_id = u.id JOIN games g ON f.game_id = g.id WHERE u.email = ?",
-    [email],
-  );
-  return rows;
 }
 
 async function getGame(apiID) {
@@ -85,6 +85,70 @@ async function createComment(userID, comment) {
 async function getTags() {
   const [rows] = await database.execute("SELECT * FROM tags");
   return rows;
+}
+
+async function getGameReviews(gameID) {
+  const [rows] = await database.execute(
+    `SELECT 
+      r.id,
+      r.review_text,
+      r.score,
+      r.game_id,
+      r.user_id,
+      r.created_at,
+      u.email
+    FROM reviews r
+    LEFT JOIN users u ON r.user_id = u.id
+    WHERE r.game_id = ?
+    ORDER BY r.created_at DESC`,
+    [gameID],
+  );
+  return rows;
+}
+
+async function getUserReviews(userID) {
+  const [rows] = await database.execute(
+    `
+    SELECT 
+      r.id AS review_id,
+      r.review_text,
+      r.score,
+      r.game_id,
+      t.id AS tag_id,
+      t.name AS tag_name
+    FROM reviews r
+    LEFT JOIN review_tags rt ON r.id = rt.review_id
+    LEFT JOIN tags t ON rt.tag_id = t.id
+    WHERE r.user_id = ?
+    `,
+    //Con esta query unimos la tabla review_tags con reviews y tags al ser relación N:M
+    [userID],
+  );
+
+  const reviews = {};
+
+  //Con esta función hacemos un for que recorre cada review y le añade un array tags vacío al objeto.
+  for (const row of rows) {
+    if (!reviews[row.review_id]) {
+      reviews[row.review_id] = {
+        id: row.review_id,
+        text: row.review_text,
+        score: row.score,
+        gameID: row.game_id,
+        tags: [],
+      };
+    }
+    //Con esta otra función si existe un nuevo tag lo incluimos dentro del tags creado antes.
+    //Sin estas dos condiciones se crearía una nueva review por cada tag, y lo que queremos es que se incluyan en la misma.
+    if (row.tag_id) {
+      reviews[row.review_id].tags.push({
+        id: row.tag_id,
+        name: row.tag_name,
+      });
+    }
+  }
+
+  return Object.values(reviews);
 }
 
 async function createReview(text, score, gameID, userID) {
@@ -208,6 +272,24 @@ router.post("/forum/comments", async (req, res) => {
 router.get("/tags", async (req, res) => {
   try {
     const data = await getTags();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/reviews", async (req, res) => {
+  try {
+    const gameID = req.query.gameID || "";
+    const userID = req.query.userID || "";
+    let data;
+    let tags = [];
+    if (gameID) {
+      const existingGame = await getGame(gameID);
+      data = await getGameReviews(existingGame.id);
+    } else {
+      data = await getUserReviews(userID);
+    }
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
