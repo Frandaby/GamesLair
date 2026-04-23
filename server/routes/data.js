@@ -1,4 +1,4 @@
-//Archivo que conecta con la base de datos local. Por ahora añade/quita favoritos
+//Archivo que conecta con la base de datos local.
 const database = require("../database");
 const express = require("express");
 const router = express.Router();
@@ -114,9 +114,12 @@ async function getUserReviews(userID) {
       r.review_text,
       r.score,
       r.game_id,
+      r.created_at,
+      g.name AS game_title,
       t.id AS tag_id,
       t.name AS tag_name
     FROM reviews r
+    LEFT JOIN games g ON r.game_id = g.id
     LEFT JOIN review_tags rt ON r.id = rt.review_id
     LEFT JOIN tags t ON rt.tag_id = t.id
     WHERE r.user_id = ?
@@ -134,7 +137,9 @@ async function getUserReviews(userID) {
         id: row.review_id,
         text: row.review_text,
         score: row.score,
+        date: row.created_at,
         gameID: row.game_id,
+        game: row.game_title,
         tags: [],
       };
     }

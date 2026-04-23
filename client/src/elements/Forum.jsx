@@ -1,7 +1,7 @@
 import "../css/Forum.css";
 import { useState, useEffect } from "react";
 
-function Forum({ user }) {
+function Forum({ user, toggle }) {
   const [postData, setPostData] = useState({ title: "", content: "" });
   const [posts, setPosts] = useState([]);
   const [commentData, setCommentData] = useState({ content: "", postID: "" });
@@ -72,7 +72,7 @@ function Forum({ user }) {
   };
   return (
     <>
-      <div id="forum">
+      <div id="forum" class={toggle ? "" : "expanded"}>
         <div id="post-input">
           <form id="post-form" onSubmit={(e) => handleSubmit(e, "post")}>
             <input

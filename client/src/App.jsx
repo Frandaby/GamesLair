@@ -6,6 +6,7 @@ import Games from "./elements/Games.jsx";
 import GameCard from "./elements/GameCard.jsx";
 import Forum from "./elements/Forum.jsx";
 import Sidebar from "./elements/Sidebar.jsx";
+import Reviews from "./elements/Reviews.jsx";
 import Registration from "./components/Registration.jsx";
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -70,7 +71,13 @@ function App() {
             </Route>
             <Route
               path="/reviews"
-              element={loggedIn ? <p>test</p> : <Navigate to="/log-in" />}
+              element={
+                loggedIn ? (
+                  <Reviews user={user} toggle={toggle} />
+                ) : (
+                  <Navigate to="/log-in" />
+                )
+              }
             />
             <Route
               path="/rankings"
@@ -95,7 +102,11 @@ function App() {
             <Route
               path="/forum"
               element={
-                loggedIn ? <Forum user={user} /> : <Navigate to="/log-in" />
+                loggedIn ? (
+                  <Forum user={user} toggle={toggle} />
+                ) : (
+                  <Navigate to="/log-in" />
+                )
               }
             />
           </Routes>

@@ -1,0 +1,109 @@
+#main-review-div {
+  width: 85%;
+  transition: width 0.3s ease;
+  background-color: #020617;
+  color: white;
+}
+
+#parent-review-div {
+  margin: 2% 6%;
+  display: flex;
+  flex-direction: column;
+}
+
+.review-div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2%;
+  padding: 2% 4%;
+  border-style: solid;
+  border-color: #e879f9;
+  box-shadow: 0 0 10px #e995f6;
+  border-radius: 15px;
+}
+
+.date-name-div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid white;
+}
+
+.score-text-div {
+  margin-top: 2%;
+  font-size: larger;
+  display: flex;
+}
+
+.title {
+  font-size: x-large;
+}
+
+.date {
+  align-self: center;
+  font-style: italic;
+}
+
+.text {
+  width: 85%;
+  overflow-wrap: break-word;
+  align-self: center;
+}
+
+.score {
+  font-size: xx-large;
+  width: 15%;
+  text-align: center;
+}
+
+.review-tags {
+  display: flex;
+  justify-content: right;
+  margin: 2%;
+  flex-wrap: wrap;
+}
+
+.review-tag {
+  background-color: #22d3ee;
+  color: black;
+  font-family: "Science Gothic", sans-serif;
+  font-size: medium;
+  border-radius: 13px;
+  padding: 0.5% 1.5%;
+  margin: 1%;
+}
+
+.icon-div {
+  display: flex;
+  justify-content: right;
+}
+
+.edit-icons {
+  font-size: x-large;
+}
+
+.edit-icons:first-child {
+  margin-right: 2%;
+}
+
+.fa-pen-fancy:hover {
+  color: orange;
+  cursor: pointer;
+}
+
+.fa-trash-alt:hover {
+  color: red;
+  cursor: pointer;
+}
+
+#reviews-header {
+  padding: 2% 0 2% 3%;
+}
+
+.review-div:hover {
+  box-shadow: 0 0 20px #e995f6;
+}
+
+.expanded {
+  width: 100% !important;
+  transition: width 0.3s ease;
+}
