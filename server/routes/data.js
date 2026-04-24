@@ -164,6 +164,21 @@ async function createReview(text, score, gameID, userID) {
   return result.insertId;
 }
 
+async function deleteReview(reviewID) {
+  const [result] = await database.execute("DELETE FROM reviews WHERE id = ?", [
+    reviewID,
+  ]);
+  return result;
+}
+
+async function updateReview(reviewID, text, score) {
+  const [result] = await database.execute(
+    "UPDATE reviews SET review_text = ?, score = ? WHERE id = ?",
+    [text, score, reviewID],
+  );
+  return result;
+}
+
 //Con esta funcion relacionamos las tablas reviews y tags en una intermedia review_tags, ya que es relacion N:M
 async function createReviewTags(reviewID, tags) {
   const placeholders = tags.map(() => "(?, ?)").join(", ");
@@ -328,6 +343,26 @@ router.post("/reviews", async (req, res) => {
     );
     await createReviewTags(reviewID, data.tags);
     await res.status(200).json({ message: "Review created successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete("/reviews", async (req, res) => {
+  try {
+    const { reviewID } = req.body;
+    await deleteReview(reviewID);
+    res.status(200).json({ message: "Review deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.put("/reviews", async (req, res) => {
+  try {
+    const { reviewID, text, score } = req.body;
+    await updateReview(reviewID, text, score);
+    res.status(200).json({ message: "Review updated successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

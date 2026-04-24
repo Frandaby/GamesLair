@@ -164,7 +164,7 @@ function GameCard({ selectedGame, user, loggedIn }) {
                       onChange={(e) =>
                         setReviewData((prev) => ({
                           ...prev,
-                          text: e.target.value,
+                          text: e.target.value.trim(),
                         }))
                       }
                       placeholder="What did you think of the game?"

@@ -47,7 +47,6 @@ function App() {
                 />
               }
             >
-              {/*user y loggedIn ADDED IN GAMECARD FOR TAGS AND REVIEW */}
               <Route
                 path=":slug"
                 element={
