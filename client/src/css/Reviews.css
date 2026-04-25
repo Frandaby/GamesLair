@@ -1,5 +1,5 @@
 #main-review-div {
-  width: 85%;
+  width: 100%;
   transition: width 0.3s ease;
   background-color: #020617;
   color: white;
@@ -101,11 +101,6 @@
 
 .review-div:hover {
   box-shadow: 0 0 20px #e995f6;
-}
-
-.expanded {
-  width: 100% !important;
-  transition: width 0.3s ease;
 }
 
 .edit-form {

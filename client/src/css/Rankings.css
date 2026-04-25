@@ -1,0 +1,60 @@
+#main-ranking-div {
+  background-color: #020617;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  transition: width 0.3s ease;
+  height: 100vh;
+}
+
+#ranking-container {
+  width: 80%;
+  margin-top: 2%;
+}
+
+.image-container {
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+}
+
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ranking {
+  padding: 1% 4%;
+  border-style: solid;
+  border-radius: 10px;
+  border-color: #22d3ee;
+  margin-bottom: 3%;
+}
+
+#ranking-header {
+  font-size: xx-large;
+  text-align: center;
+}
+
+.tag-header {
+  font-size: x-large;
+}
+
+.tag-header:hover {
+  cursor: pointer;
+  color: #22d3ee;
+}
+
+.ranking-table {
+  border-top: 1px solid white;
+  width: 100%;
+  padding-top: 2%;
+  font-size: larger;
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+
+.rank {
+  font-size: x-large;
+}

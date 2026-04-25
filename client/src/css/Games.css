@@ -25,13 +25,9 @@
 
 #main-page {
   background-color: #020617;
-  width: 85%;
+  width: 100%;
   transition: width 0.3s ease;
-}
-
-.expanded {
-  width: 100% !important;
-  transition: width 0.3s ease;
+  padding-bottom: 3%;
 }
 
 .game-image {
@@ -64,7 +60,7 @@
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-bottom: 5%;
+  margin: 2% 0 5% 0;
 }
 
 .details-text {

@@ -1,0 +1,23 @@
+#main-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 3%;
+  color: white;
+  background-color: #650313;
+}
+
+#email-link {
+  color: white;
+}
+
+#email-link:visited {
+  color: white;
+}
+
+#email-link:hover {
+  color: lightgray;
+}
+
+#email-span {
+  font-weight: bold;
+}

@@ -1,10 +1,12 @@
 #forum {
   display: flex;
   flex-direction: column;
-  width: 65%;
+  width: 100%;
+  padding-top: 4%;
+  inset: 0;
   transition: width 0.3s ease;
-  padding: 3% 10%;
   background-color: #020617;
+  padding-bottom: 2%;
 }
 
 .input-fields {
@@ -157,7 +159,6 @@ p {
   margin: 0;
 }
 
-.expanded {
-  width: 100% !important;
-  transition: width 0.3s ease;
+.posts {
+  padding: 0 4%;
 }

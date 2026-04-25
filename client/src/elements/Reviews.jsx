@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 // https://www.youtube.com/watch?v=vOftV4_roOQ&t=104s
 
-function Reviews({ user, toggle }) {
+function Reviews({ user }) {
   const [reviews, setReviews] = useState([]);
   const [editID, setEditID] = useState(null);
   const [updatedReview, setUpdatedReview] = useState({});
@@ -84,7 +84,7 @@ function Reviews({ user, toggle }) {
 
   return (
     <>
-      <div id="main-review-div" class={toggle ? "" : "expanded"}>
+      <div id="main-review-div">
         <h2 id="reviews-header">
           {reviews.length > 0
             ? "Manage your reviews here!"

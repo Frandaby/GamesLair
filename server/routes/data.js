@@ -192,6 +192,53 @@ async function createReviewTags(reviewID, tags) {
   return result;
 }
 
+async function getRankings() {
+  const [rows] = await database.execute(
+    `SELECT * FROM (
+    SELECT 
+      t.id AS tag_id,
+      t.name AS tag_name,
+      g.id AS game_id,
+      g.name AS game_name,
+      g.image_url AS image_url,
+      COUNT(rt.tag_id) AS tag_count,
+      ROW_NUMBER() OVER (
+        PARTITION BY t.id 
+        ORDER BY COUNT(rt.tag_id) DESC
+      ) AS rank_position
+    FROM review_tags rt
+    JOIN reviews r ON rt.review_id = r.id
+    JOIN tags t ON rt.tag_id = t.id
+    JOIN games g ON r.game_id = g.id
+    GROUP BY t.id, g.id
+    ) ranked
+    WHERE rank_position <= 10;`,
+  );
+  const result = [];
+
+  rows.forEach((row) => {
+    let group = result.find((t) => t.tag_name === row.tag_name);
+
+    if (!group) {
+      group = {
+        tag_name: row.tag_name,
+        top_games: [],
+      };
+      result.push(group);
+    }
+
+    group.top_games.push({
+      game_id: row.game_id,
+      game_name: row.game_name,
+      image_url: row.image_url,
+      tag_count: row.tag_count,
+      rank: row.rank_position,
+    });
+  });
+
+  return result;
+}
+
 //Ruta para obtener los favoritos
 router.get("/favourites", async (req, res) => {
   try {
@@ -363,6 +410,17 @@ router.put("/reviews", async (req, res) => {
     const { reviewID, text, score } = req.body;
     await updateReview(reviewID, text, score);
     res.status(200).json({ message: "Review updated successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/rankings", async (req, res) => {
+  try {
+    const data = await getRankings();
+    // Para ordenar los rankings por orden alfabético
+    data.sort((a, b) => a.tag_name.localeCompare(b.tag_name));
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

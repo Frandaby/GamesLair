@@ -3,7 +3,7 @@ import "../css/Games.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 
-function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
+function Games({ query, setSelectedGame, loggedIn, user }) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
@@ -188,7 +188,7 @@ function Games({ query, toggle, setSelectedGame, loggedIn, user }) {
   };
   return (
     <>
-      <div id="main-page" class={toggle ? "" : "expanded"}>
+      <div id="main-page">
         {path !== "/favourites" && (
           <div id="filter-container">
             <div class="filters">
