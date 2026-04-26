@@ -96,6 +96,7 @@ async function getGameReviews(gameID) {
       r.game_id,
       r.user_id,
       r.created_at,
+      r.updated_at,
       u.email
     FROM reviews r
     LEFT JOIN users u ON r.user_id = u.id
@@ -115,6 +116,7 @@ async function getUserReviews(userID) {
       r.score,
       r.game_id,
       r.created_at,
+      r.updated_at,
       g.name AS game_title,
       t.id AS tag_id,
       t.name AS tag_name
@@ -138,6 +140,7 @@ async function getUserReviews(userID) {
         text: row.review_text,
         score: row.score,
         date: row.created_at,
+        updatedDate: row.updated_at,
         gameID: row.game_id,
         game: row.game_title,
         tags: [],
@@ -172,11 +175,10 @@ async function deleteReview(reviewID) {
 }
 
 async function updateReview(reviewID, text, score) {
-  const [result] = await database.execute(
-    "UPDATE reviews SET review_text = ?, score = ? WHERE id = ?",
+  await database.execute(
+    "UPDATE reviews SET review_text = ?, score = ?, updated_at = NOW() WHERE id = ?",
     [text, score, reviewID],
   );
-  return result;
 }
 
 //Con esta funcion relacionamos las tablas reviews y tags en una intermedia review_tags, ya que es relacion N:M
@@ -190,6 +192,19 @@ async function createReviewTags(reviewID, tags) {
   );
 
   return result;
+}
+
+async function updateReviewTags(reviewID, tags) {
+  await database.execute("DELETE FROM review_tags WHERE review_id = ?", [
+    reviewID,
+  ]);
+  if (tags && tags.length > 0) {
+    const values = tags.map((tagID) => [reviewID, tagID]);
+    await database.query(
+      "INSERT INTO review_tags (review_id, tag_id) VALUES ?",
+      [values],
+    );
+  }
 }
 
 async function getRankings() {
@@ -407,8 +422,9 @@ router.delete("/reviews", async (req, res) => {
 
 router.put("/reviews", async (req, res) => {
   try {
-    const { reviewID, text, score } = req.body;
+    const { reviewID, text, score, tags } = req.body;
     await updateReview(reviewID, text, score);
+    await updateReviewTags(reviewID, tags);
     res.status(200).json({ message: "Review updated successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });

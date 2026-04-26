@@ -33,27 +33,29 @@ function Rankings({ toggle }) {
 
   return (
     <>
-      <div id="main-ranking-div" class={toggle ? "" : "expanded"}>
+      <div id="main-ranking-div" className={toggle ? "" : "expanded"}>
         <div id="ranking-container">
           <h2 id="ranking-header">Rankings</h2>
           {rankings.map((ranking) => (
-            <div class="ranking">
+            <div className="ranking" key={ranking.tag_name}>
+              {/*ADDED UNIQUE KEY*/}
               <h3
-                class="tag-header"
+                className="tag-header"
                 onClick={() => handleClick(ranking.tag_name)}
               >
                 {formatTag(ranking.tag_name)}
               </h3>
               {/*Relacionamos toggleRanking con ranking.tag_name para que solo muestre la tabla del ranking en el que hacemos click. */}
               {toggleRanking === ranking.tag_name && (
-                <table class="ranking-table">
+                <table className="ranking-table">
                   <tbody>
                     {ranking.top_games.map((game) => (
-                      <tr>
-                        <td class="rank">{game.rank}</td>
+                      <tr key={game.id}>
+                        {/*ADDED UNIQUE KEY */}
+                        <td className="rank">{game.rank}</td>
                         <td>
-                          <div class="image-container">
-                            <img src={game.image_url} class="game-image" />
+                          <div className="image-container">
+                            <img src={game.image_url} className="game-image" />
                           </div>
                         </td>
                         <td>{game.game_name}</td>

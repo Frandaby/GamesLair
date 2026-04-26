@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   transition: width 0.3s ease;
-  height: 100vh;
+  height: 100%;
 }
 
 #ranking-container {
@@ -57,4 +57,63 @@
 
 .rank {
   font-size: x-large;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  #main-ranking-div {
+    height: auto;
+    min-height: 100vh;
+    padding: 10px 0;
+  }
+
+  #ranking-container {
+    width: 95%;
+    margin-top: 10px;
+  }
+
+  #ranking-header {
+    font-size: 1.5rem;
+  }
+
+  .ranking {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .tag-header {
+    font-size: 1.1rem;
+    text-align: center;
+  }
+
+  .ranking-table {
+    font-size: 0.9rem;
+    border-spacing: 0 10px;
+  }
+
+  .rank {
+    font-size: 1rem;
+  }
+
+  .image-container {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+
+  .game-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ranking-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .ranking-table td:nth-child(3) {
+    padding-right: 10px;
+  }
 }

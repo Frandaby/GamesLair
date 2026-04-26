@@ -162,3 +162,112 @@ p {
 .posts {
   padding: 0 4%;
 }
+
+#forum-header {
+  font-size: xx-large;
+  color: white;
+  margin: 0;
+  text-align: center;
+  padding-bottom: 2%;
+}
+
+@media (max-width: 768px) {
+  .input-fields {
+    width: 90%;
+    font-size: medium;
+  }
+
+  #post-button {
+    width: 40%;
+    padding: 2%;
+  }
+
+  .comment-input {
+    width: 65%;
+  }
+
+  #comment-button {
+    width: 30%;
+    padding: 1.5%;
+  }
+
+  .comment-data {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .comment-data p {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .comment-data p:last-child {
+    font-size: 0.7rem;
+    opacity: 0.7;
+  }
+
+  .post-data {
+    flex-direction: column;
+    gap: 5px;
+    font-size: small;
+  }
+}
+
+@media (max-width: 480px) {
+  #forum {
+    padding-top: 8%;
+  }
+
+  .input-fields {
+    width: 95%;
+    font-size: medium;
+    padding: 3%;
+  }
+
+  #title-input {
+    font-size: large;
+  }
+
+  #post-button {
+    width: 80%;
+    padding: 3%;
+    font-size: medium;
+  }
+
+  .comment-form {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .comment-input {
+    width: 95%;
+  }
+
+  #comment-button {
+    width: 60%;
+    padding: 2%;
+  }
+
+  .post-body {
+    margin: 5% 3%;
+  }
+
+  .post-text {
+    padding: 4%;
+  }
+
+  .post-content {
+    font-size: 0.95rem;
+  }
+
+  .comment-body {
+    margin: 4%;
+    padding: 3%;
+  }
+
+  .posts {
+    padding: 0 2%;
+  }
+}

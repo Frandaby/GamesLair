@@ -55,10 +55,12 @@
   padding: 2%;
   font-family: "Science Gothic", sans-serif;
   font-size: larger;
+  transition: box-shadow 0.3s ease;
 }
 
 #search-input:hover {
   box-shadow: 0 0 20px #22d3ee;
+  transition: box-shadow 0.3s ease;
 }
 
 /*RESPONSIVE*/
@@ -67,26 +69,37 @@
   #header {
     flex-direction: column;
     align-items: center;
-    padding-bottom: 15px;
+    position: relative;
+    gap: 10px;
+    padding: 10px;
   }
 
   #logo-div {
-    width: 200px;
+    width: 140px;
+  }
+
+  #search-bar {
+    padding: 0;
+    gap: 6px;
   }
 
   #search-bar h1 {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     text-align: center;
+    margin: 0;
+    padding-bottom: 1%;
   }
 
   #search-input {
-    width: 80%;
+    width: 85%;
+    padding: 10px;
+    font-size: 0.9rem;
   }
 
   #user-buttons {
-    margin-top: 15px;
+    margin-top: 5px;
     width: 100%;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
   }
 }

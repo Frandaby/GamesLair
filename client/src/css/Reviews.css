@@ -97,6 +97,7 @@
 
 #reviews-header {
   padding: 2% 0 2% 3%;
+  font-size: xx-large;
 }
 
 .review-div:hover {
@@ -142,11 +143,11 @@
 }
 
 .edit-text:hover {
-  border: 3px solid #22d3ee;
+  box-shadow: 0 0 10px #22d3ee;
 }
 
 .edit-score:hover {
-  border: 3px solid #22d3ee;
+  box-shadow: 0 0 10px #22d3ee;
 }
 
 .edit-button {
@@ -165,4 +166,106 @@
   cursor: pointer;
   background-color: #e879f9;
   border: none;
+}
+
+.tag {
+  background-color: #020617;
+  color: white;
+  font-family: "Science Gothic", sans-serif;
+  font-size: smaller;
+  border-radius: 13px;
+  border-style: solid;
+  border-color: #22d3ee;
+  padding: 0.5% 1.5%;
+  margin: 1%;
+}
+
+.tag:hover,
+.tag-selected {
+  cursor: pointer;
+  background-color: #22d3ee;
+  color: black;
+}
+
+#tags-div {
+  padding-top: 2%;
+}
+
+@media (max-width: 768px) {
+  #parent-review-div {
+    margin: 2% 3%;
+  }
+
+  .review-div {
+    padding: 4%;
+  }
+
+  /* HEADER (título + fecha) */
+  .date-name-div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .date {
+    font-size: 0.85rem;
+  }
+
+  /* SCORE + TEXT */
+  .score-text-div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .score {
+    width: 100%;
+    font-size: 1.8rem;
+    text-align: left;
+  }
+
+  .text {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  /* TAGS */
+  .review-tags {
+    justify-content: flex-start;
+  }
+
+  .review-tag {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+
+  /* ICONOS */
+  .edit-icons {
+    font-size: 1.3rem;
+  }
+
+  /* EDIT MODE */
+  .edit-form-div {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .edit-score {
+    width: 100%;
+    font-size: 1.5rem;
+  }
+
+  .edit-text {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .edit-button {
+    width: 60%;
+    padding: 10px;
+  }
 }

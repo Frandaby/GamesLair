@@ -144,8 +144,14 @@
 
 #user-search-div {
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
+  align-items: center;
   padding: 2% 3%;
+}
+
+#favourites-header {
+  font-size: xx-large;
+  color: white;
 }
 
 #user-search-input {
@@ -162,6 +168,29 @@
 
 #user-search-input:hover {
   box-shadow: 0 0 20px #22d3ee;
+}
+
+.see-more-div {
+  display: flex;
+  justify-content: center;
+}
+
+.see-more {
+  font-size: larger;
+  font-family: "Science Gothic", sans-serif;
+  margin: 3% 0 1% 0;
+  background-color: #22d3ee;
+  width: 30%;
+  border-radius: 20px;
+  border: none;
+  padding: 0.5% 1%;
+  align-self: center;
+}
+
+.see-more:hover {
+  cursor: pointer;
+  background-color: #e879f9;
+  border: none;
 }
 
 /*RESPONSIVE*/

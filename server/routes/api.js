@@ -3,11 +3,11 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 const API_KEY = process.env.API_KEY;
-let page = 1;
 
 //Esta ruta se utilizará cuando queramos volver a la página principal.
 router.get("/all", async (req, res) => {
   try {
+    const page = req.query.page;
     const response = await fetch(
       `https://api.rawg.io/api/games?key=${API_KEY}&page=${page}`,
     );
@@ -37,6 +37,7 @@ router.get("/details", async (req, res) => {
 
 router.get("/order-filter", async (req, res) => {
   try {
+    const page = req.query.page;
     const genre = req.query.genre;
     const platform = req.query.platform;
     const order = req.query.order;

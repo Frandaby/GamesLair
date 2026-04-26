@@ -15,6 +15,14 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
   const [genre, setGenre] = useState("");
   const [searchedUser, setSearchedUser] = useState("");
   const [faves, setFaves] = useState({});
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    setGames([]);
+    setPage(1);
+    setHasMore(true);
+  }, [order, genre, platform, query, path, searchedUser]);
 
   useEffect(() => {
     if (user?.email && !searchedUser) {
@@ -50,9 +58,9 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
     } else if (query) {
       endpoint = `http://localhost:5000/api/search?query=${query}`;
     } else if (order || platform || genre) {
-      endpoint = `http://localhost:5000/api/order-filter?platform=${platform}&genre=${genre}&order=${order}`;
+      endpoint = `http://localhost:5000/api/order-filter?platform=${platform}&genre=${genre}&order=${order}&page=${page}`;
     } else {
-      endpoint = "http://localhost:5000/api/all";
+      endpoint = `http://localhost:5000/api/all?page=${page}`;
     }
 
     fetch(endpoint)
@@ -60,7 +68,16 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
         return res.json();
       })
       .then((data) => {
-        setGames(data);
+        setGames((prev) => {
+          if (page === 1) {
+            return data;
+          }
+          return [...prev, ...data];
+        });
+
+        if (data.length < 20) {
+          setHasMore(false);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -71,7 +88,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
         return res.json();
       })
       .then((data) => {
-        const favourites = data.reduce((acc, game) => {
+        const favourites = data?.reduce((acc, game) => {
           acc[game.id] = true;
           return acc;
         }, {});
@@ -82,7 +99,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
       .catch((error) => {
         console.error(error);
       }); // Esto cambia según quién esté logueado
-  }, [searchedUser, user, path, query, order, platform, genre]);
+  }, [page, searchedUser, user, path, query, order, platform, genre]);
 
   const ordersArray = [
     {
@@ -191,37 +208,54 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
       <div id="main-page">
         {path !== "/favourites" && (
           <div id="filter-container">
-            <div class="filters">
-              <label class="filter-label" for="order">
+            <div className="filters">
+              <label className="filter-label" htmlFor="order">
                 Order by:
               </label>
-              <select onChange={handleOrder} class="filter-input" name="order">
+              <select
+                onChange={handleOrder}
+                className="filter-input"
+                name="order"
+              >
                 {ordersArray.map((order) => (
-                  <option value={order.value}>{order.text}</option>
+                  <option key={order.value} value={order.value}>
+                    {order.text}
+                    {/*ADDED UNIQUE KEY */}
+                  </option>
                 ))}
               </select>
             </div>
-            <div class="filters">
-              <label class="filter-label" for="genre">
+            <div className="filters">
+              <label className="filter-label" htmlFor="genre">
                 Genre:
               </label>
-              <select onChange={handleGenre} class="filter-input" name="genre">
+              <select
+                onChange={handleGenre}
+                className="filter-input"
+                name="genre"
+              >
                 {genres.map((genre) => (
-                  <option value={genre.id}>{genre.name}</option>
+                  <option key={genre.id} value={genre.id}>
+                    {genre.name}
+                    {/*ADDED UNIQUE KEY */}
+                  </option>
                 ))}
               </select>
             </div>
-            <div class="filters">
-              <label class="filter-label" for="platform">
+            <div className="filters">
+              <label className="filter-label" htmlFor="platform">
                 Platform:
               </label>
               <select
                 onChange={handlePlatform}
-                class="filter-input"
+                className="filter-input"
                 name="platform"
               >
                 {platforms.map((platform) => (
-                  <option value={platform.id}>{platform.name}</option>
+                  <option key={platform.id} value={platform.id}>
+                    {platform.name}
+                    {/*ADDED UNIQUE KEY */}
+                  </option>
                 ))}
               </select>
             </div>
@@ -229,6 +263,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
         )}
         {path === "/favourites" && (
           <div id="user-search-div">
+            <h2 id="favourites-header">Favourites</h2>
             <input
               id="user-search-input"
               type="search"
@@ -237,22 +272,23 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
             ></input>
           </div>
         )}
-        <div class="games">
+        <div className="games">
           {games.map((game) => (
-            <div class="game-card">
-              <div class="game-name-div">
-                <h2 class="game-name">{game.name}</h2>
+            <div className="game-card" key={game.id}>
+              {/*ADDED UNIQUE KEY */}
+              <div className="game-name-div">
+                <h2 className="game-name">{game.name}</h2>
               </div>
               {game.background_image && (
-                <img class="game-image" src={game.background_image} />
+                <img className="game-image" src={game.background_image} />
               )}
-              <div class="game-details">
-                <p class="details-text">
-                  <span class="details-bold">Score: </span>
+              <div className="game-details">
+                <p className="details-text">
+                  <span className="details-bold">Score: </span>
                   {game.metacritic}
                 </p>
-                <p class="details-text">
-                  <span class="details-bold">Release data: </span>
+                <p className="details-text">
+                  <span className="details-bold">Release data: </span>
                   {game?.released?.slice(0, 4)}{" "}
                   {/*La función slice elimina los caracteres no incluidos 
                   (en este caso solo deja los 5 primeros, el año)
@@ -260,14 +296,14 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
                 </p>
                 <button
                   onClick={() => handleSelectedGame(game.id, game.slug)}
-                  class="game-button"
+                  className="game-button"
                 >
                   Game details
                 </button>
                 <i
                   key={game.id}
                   onClick={() => handleFav(game)}
-                  class={
+                  className={
                     faves[game.id]
                       ? "fas fa-heart fas-fa-heart"
                       : "far fa-heart far-fa-heart"
@@ -277,6 +313,16 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
             </div>
           ))}
         </div>
+        {hasMore && (
+          <div className="see-more-div">
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              className="see-more"
+            >
+              See more
+            </button>
+          </div>
+        )}
       </div>
       <Outlet />
     </>

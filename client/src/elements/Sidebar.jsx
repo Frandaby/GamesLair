@@ -41,18 +41,18 @@ function Sidebar({ toggle, setToggle }) {
         }
         onClick={handleToggle}
       ></i>
-      <div id="sidebar" class={toggle ? "" : "collapsed"}>
+      <div id="sidebar" className={toggle ? "" : "collapsed"}>
         <i
           onClick={handleToggle}
-          class={
+          className={
             toggle
               ? "fas fa-angle-double-left fas-fa-angle-double hide-on-mobile"
               : "fas fa-angle-double-right fas-fa-angle-double hide-on-mobile"
           }
         ></i>
-        <ul id="nav-list" class={toggle ? "" : "collapsed"}>
+        <ul id="nav-list" className={toggle ? "" : "collapsed"}>
           <li
-            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
+            className={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/reviews");
             }}
@@ -60,7 +60,7 @@ function Sidebar({ toggle, setToggle }) {
             Reviews
           </li>
           <li
-            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
+            className={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/rankings");
             }}
@@ -68,7 +68,7 @@ function Sidebar({ toggle, setToggle }) {
             Rankings
           </li>
           <li
-            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
+            className={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/favourites");
             }}
@@ -76,7 +76,7 @@ function Sidebar({ toggle, setToggle }) {
             Favourites
           </li>
           <li
-            class={`nav-element ${toggle ? "" : "element-collapsed"}`}
+            className={`nav-element ${toggle ? "" : "element-collapsed"}`}
             onClick={() => {
               navigate("/forum");
             }}

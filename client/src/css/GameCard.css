@@ -230,6 +230,20 @@
   border: 2px solid #22d3ee;
 }
 
+.game-card-review {
+  display: flex;
+  padding: 1% 0 1% 5%;
+}
+
+.game-card-score {
+  font-size: larger;
+}
+
+.average-score {
+  text-align: center;
+  font-size: x-large;
+}
+
 /*RESPONSIVE*/
 @media (max-width: 850px) {
   #popup {

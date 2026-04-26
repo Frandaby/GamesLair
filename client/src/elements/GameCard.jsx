@@ -26,6 +26,22 @@ function GameCard({ selectedGame, user, loggedIn }) {
   const length = 244;
   const isLong = selectedGame?.description_raw?.length > length;
 
+  const getColour = (score) => {
+    if (score < 50) {
+      return "red";
+    } else if (score <= 75) {
+      return "orange";
+    } else {
+      return "green";
+    }
+  };
+
+  const getAverageScore = () => {
+    return Math.round(
+      reviews.reduce((sum, review) => sum + review.score, 0) / reviews.length,
+    );
+  };
+
   async function postRequest(endpoint, data) {
     const res = await fetch(endpoint, {
       method: "POST",
@@ -121,16 +137,20 @@ function GameCard({ selectedGame, user, loggedIn }) {
             <div id="date">
               <h3>{selectedGame?.released?.split("-").reverse().join("-")}</h3>
             </div>
-            <div class="titles">
+            <div className="titles">
               <h3>Genres:</h3>
             </div>
             <div id="genres">
               {selectedGame?.genres?.map((genre) => (
-                <p class="genre-text">{genre.name}</p>
+                <p className="genre-text" key={genre.id}>
+                  {" "}
+                  {/*ADDED UNIQUE KEY*/}
+                  {genre.name}
+                </p>
               ))}
             </div>
             <div id="rating"></div>
-            <div class="titles">
+            <div className="titles">
               <h3>Description:</h3>
             </div>
             <div id="description-text">
@@ -142,16 +162,35 @@ function GameCard({ selectedGame, user, loggedIn }) {
                 {more ? "See less" : "See more"}
               </a>
             </div>
-            <div class="titles">
+            <div className="titles">
               <h3>Platforms:</h3>
             </div>
             <div id="platforms">
               {selectedGame?.platforms?.map((platform) => (
-                <p class="platform-text">{platform.platform.name}</p>
+                <p className="platform-text" key={platform.platform.id}>
+                  {" "}
+                  {/*ADDED UNIQUE KEY*/}
+                  {platform.platform.name}
+                </p>
               ))}
             </div>
+            <div id="rating">
+              {reviews.length > 0 && (
+                <>
+                  <div className="titles">
+                    <h3>Average Score:</h3>
+                  </div>
+                  <h3
+                    className="average-score"
+                    style={{ color: getColour(getAverageScore()) }}
+                  >
+                    {getAverageScore()}/100
+                  </h3>
+                </>
+              )}
+            </div>
             {loggedIn && !hasReview && (
-              <div class="titles">
+              <div className="titles">
                 <h3>Write a review:</h3>
               </div>
             )}
@@ -195,7 +234,7 @@ function GameCard({ selectedGame, user, loggedIn }) {
                           key={tag.id}
                           type="button"
                           onClick={() => handleTag(tag.id)}
-                          class={
+                          className={
                             reviewData.tags.includes(tag.id)
                               ? "tag tag-selected"
                               : "tag"
@@ -211,31 +250,41 @@ function GameCard({ selectedGame, user, loggedIn }) {
                   </form>
                 )}
                 {reviews.length > 0 && (
-                  <div class="titles">
+                  <div className="titles">
                     <h3>Reviews:</h3>
                   </div>
                 )}
                 {reviews.length > 0 && (
                   <div>
                     {reviews.map((review) => (
-                      <div class="review-body">
-                        <div class="review-data">
+                      <div className="review-body" key={review.id}>
+                        {/*ADDED UNIQUE KEY*/}
+                        <div className="review-data">
                           <p>{review.email}</p>
                           <p>
-                            {review?.created_at
+                            {(review?.updated_at || review?.created_at)
                               ?.slice(0, 10)
                               .split("-")
                               .reverse()
                               .join("-") +
                               " at " +
-                              review?.created_at
+                              (review?.updated_at || review?.created_at)
                                 ?.slice(11, 19)
                                 .split("-")
                                 .reverse()
                                 .join("-")}
                           </p>
                         </div>
-                        <p class="review-text">{review.review_text}</p>
+                        <div className="game-card-review">
+                          {" "}
+                          <p
+                            className="game-card-score"
+                            style={{ color: getColour(review.score) }}
+                          >
+                            {review.score}
+                          </p>
+                          <p className="review-text">{review.review_text}</p>
+                        </div>
                       </div>
                     ))}
                   </div>

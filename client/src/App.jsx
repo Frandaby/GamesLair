@@ -2,13 +2,13 @@
 
 import "./css/App.css";
 import Header from "./elements/Header.jsx";
-import Games from "./elements/Games.jsx";
 import GameCard from "./elements/GameCard.jsx";
 import Forum from "./elements/Forum.jsx";
 import Sidebar from "./elements/Sidebar.jsx";
 import Reviews from "./elements/Reviews.jsx";
 import Rankings from "./elements/Rankings.jsx";
 import Registration from "./components/Registration.jsx";
+import Games from "./components/Games.jsx";
 import Footer from "./elements/Footer.jsx";
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";

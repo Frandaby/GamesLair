@@ -8,7 +8,12 @@ import TextareaAutosize from "react-textarea-autosize";
 function Reviews({ user }) {
   const [reviews, setReviews] = useState([]);
   const [editID, setEditID] = useState(null);
-  const [updatedReview, setUpdatedReview] = useState({});
+  const [updatedReview, setUpdatedReview] = useState({
+    score: "",
+    text: "",
+    tags: [],
+  });
+  const [tags, setTags] = useState([]);
 
   const getReviews = () => {
     fetch(`http://localhost:5000/data/reviews?userID=${user.id}`)
@@ -31,6 +36,17 @@ function Reviews({ user }) {
 
   useEffect(() => {
     getReviews();
+
+    fetch("http://localhost:5000/data/tags")
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setTags(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   async function deleteRequest(endpoint, data) {
@@ -62,7 +78,10 @@ function Reviews({ user }) {
 
   const handleEdit = (review) => {
     setEditID(review.id);
-    setUpdatedReview(review);
+    setUpdatedReview({
+      ...review,
+      tags: review.tags ? review.tags.map((tag) => tag.id) : [],
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -73,6 +92,7 @@ function Reviews({ user }) {
         reviewID: editID,
         score: updatedReview.score,
         text: updatedReview.text,
+        tags: updatedReview.tags,
       });
       setEditID(null);
       setUpdatedReview({});
@@ -80,6 +100,18 @@ function Reviews({ user }) {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleTag = (tagID) => {
+    setUpdatedReview((prev) => {
+      const isSelected = prev.tags.includes(tagID);
+      return {
+        ...prev,
+        tags: isSelected
+          ? prev.tags.filter((id) => id !== tagID)
+          : [...prev.tags, tagID],
+      };
+    });
   };
 
   return (
@@ -92,29 +124,26 @@ function Reviews({ user }) {
         </h2>
         <div id="parent-review-div">
           {reviews.map((review) => (
-            <div class="review-div">
+            <div className="review-div" key={review.id}>
+              {/*ADDED UNIQUE KEY*/}
               {editID === review.id ? (
                 <>
-                  <div class="date-name-div">
-                    <h3 class="title">{review.game}</h3>
-                    <h3 class="date">
-                      {review?.date
+                  <div className="date-name-div">
+                    <h3 className="title">{review.game}</h3>
+                    <h3 className="date">
+                      {(review?.updatedDate || review?.date)
                         ?.slice(0, 10)
                         .split("-")
                         .reverse()
                         .join("-") +
                         " at " +
-                        review?.date
-                          ?.slice(11, 19)
-                          .split("-")
-                          .reverse()
-                          .join("-")}
+                        (review?.updatedDate || review?.date)?.slice(11, 19)}
                     </h3>
                   </div>
-                  <form class="edit-form" onSubmit={handleSubmit}>
-                    <div class="edit-form-div">
+                  <form className="edit-form" onSubmit={handleSubmit}>
+                    <div className="edit-form-div">
                       <input
-                        class="edit-score"
+                        className="edit-score"
                         value={updatedReview.score}
                         onChange={(e) =>
                           setUpdatedReview({
@@ -124,7 +153,7 @@ function Reviews({ user }) {
                         }
                       />
                       <TextareaAutosize
-                        class="edit-text"
+                        className="edit-text"
                         value={updatedReview.text}
                         onChange={(e) =>
                           setUpdatedReview({
@@ -134,48 +163,66 @@ function Reviews({ user }) {
                         }
                       />
                     </div>
-                    <button class="edit-button" type="submit">
+                    <div id="tags-div">
+                      {tags.map((tag) => (
+                        <button
+                          key={tag.id}
+                          type="button"
+                          onClick={() => handleTag(tag.id)}
+                          className={
+                            updatedReview.tags.includes(tag.id)
+                              ? "tag tag-selected"
+                              : "tag"
+                          }
+                        >
+                          {tag.name}
+                        </button>
+                      ))}
+                    </div>
+                    <button className="edit-button" type="submit">
                       Save
                     </button>
                   </form>
                 </>
               ) : (
                 <>
-                  <div class="icon-div">
+                  <div className="icon-div">
                     <i
-                      class="edit-icons fas fa-pen-fancy"
+                      className="edit-icons fas fa-pen-fancy"
                       onClick={() => handleEdit(review)}
                     />
                     <i
-                      class="edit-icons fas fa-trash-alt"
+                      className="edit-icons fas fa-trash-alt"
                       onClick={() => handleDelete(review.id)}
                     />
                   </div>
-                  <div class="date-name-div">
-                    <h3 class="title">{review.game}</h3>
-                    <h3 class="date">
-                      {review?.date
+                  <div className="date-name-div">
+                    <h3 className="title">{review.game}</h3>
+                    <h3 className="date">
+                      {(review?.updatedDate || review?.date)
                         ?.slice(0, 10)
                         .split("-")
                         .reverse()
                         .join("-") +
                         " at " +
-                        review?.date
-                          ?.slice(11, 19)
-                          .split("-")
-                          .reverse()
-                          .join("-")}
+                        (review?.updatedDate || review?.date)?.slice(11, 19)}
                     </h3>
                   </div>
-                  <div class="score-text-div">
-                    <p class="score" style={{ color: getColour(review.score) }}>
+                  <div className="score-text-div">
+                    <p
+                      className="score"
+                      style={{ color: getColour(review.score) }}
+                    >
                       {review.score}
                     </p>
-                    <p class="text">{review.text}</p>
+                    <p className="text">{review.text}</p>
                   </div>
-                  <div class="review-tags">
+                  <div className="review-tags">
                     {review?.tags?.map((tag) => (
-                      <p class="review-tag">{tag.name}</p>
+                      <p className="review-tag" key={tag.id}>
+                        {tag.name}
+                        {/*ADDED UNIQUE KEY*/}
+                      </p>
                     ))}
                   </div>
                 </>

@@ -75,7 +75,7 @@ function Header({ setQuery, loggedIn, setLoggedIn, setUser }) {
               image={signUp}
               onClick={() => handleRegistration("sign-up")}
             />
-            {/*En React escribimos los parámetros dentro de la etiqueta*/}
+
             <Button
               text="Log in"
               image={logIn}

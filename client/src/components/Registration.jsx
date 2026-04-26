@@ -15,6 +15,7 @@ function Registration({ setLoggedIn, setUser }) {
   });
   const [repeatedPassword, setRepeatedPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function postRequest(endpoint, data) {
     const res = await fetch(endpoint, {
@@ -38,19 +39,21 @@ function Registration({ setLoggedIn, setUser }) {
       const data = await postRequest(endpoint, userData);
       console.log(data.message || data.error);
       if (path == "/log-in" && data.token) {
+        setErrorMessage("");
         localStorage.setItem("token", data.token);
         setLoggedIn(true);
         setUser({ id: data.user.id, email: data.user.email });
         navigate("/");
       } else if (path == "/log-in" && !data.token) {
-        console.log(data.message || data.error);
+        setErrorMessage(data.message || data.error);
       } else if (
         path == "/sign-up" &&
         data.message == "User created successfully."
       ) {
+        setErrorMessage("");
         navigate("/log-in");
       } else {
-        console.log(data.message || data.error);
+        setErrorMessage(data.message || data.error);
       }
     }
   };
@@ -84,17 +87,22 @@ function Registration({ setLoggedIn, setUser }) {
         >
           <form id="form" onSubmit={handleSubmit}>
             <div id="form-div">
+              {errorMessage.length > 0 && (
+                <p id="error-message">
+                  Authentication failed, please try again.
+                </p>
+              )}
               <h2 id="form-title">
                 {path == "/sign-up" ? "Sign up" : "Log in"}
               </h2>
               {path == "/sign-up" && (
-                <div class="label-input-div">
-                  <label class="form-label" for="name">
+                <div className="label-input-div">
+                  <label className="form-label" htmlFor="name">
                     <b>Name</b>
                   </label>
                   <input
                     onChange={handleUserData}
-                    class="form-input"
+                    className="form-input"
                     name="firstName"
                     type="text"
                     placeholder="Paco"
@@ -103,13 +111,13 @@ function Registration({ setLoggedIn, setUser }) {
                 </div>
               )}
               {path == "/sign-up" && (
-                <div class="label-input-div">
-                  <label class="form-label" for="surmane">
+                <div className="label-input-div">
+                  <label className="form-label" htmlFor="surmane">
                     <b>Surname</b>
                   </label>
                   <input
                     onChange={handleUserData}
-                    class="form-input"
+                    className="form-input"
                     name="lastName"
                     type="text"
                     placeholder="Paquez"
@@ -117,26 +125,26 @@ function Registration({ setLoggedIn, setUser }) {
                   />
                 </div>
               )}
-              <div class="label-input-div">
-                <label class="form-label" for="email">
+              <div className="label-input-div">
+                <label className="form-label" htmlFor="email">
                   <b>Email</b>
                 </label>
                 <input
                   onChange={handleUserData}
-                  class="form-input"
+                  className="form-input"
                   name="email"
                   type="email"
                   placeholder="paco@paco.com"
                   required
                 />
               </div>
-              <div class="label-input-div">
-                <label class="form-label" for="password">
+              <div className="label-input-div">
+                <label className="form-label" htmlFor="password">
                   <b>Password</b>
                 </label>
                 <input
                   onChange={handleUserData}
-                  class="form-input"
+                  className="form-input"
                   name="password"
                   type="password"
                   placeholder="Min 8 characters"
@@ -145,13 +153,13 @@ function Registration({ setLoggedIn, setUser }) {
                 />
               </div>
               {path == "/sign-up" && (
-                <div class="label-input-div">
+                <div className="label-input-div">
                   <label
                     style={{
                       color: passwordError ? "red" : "#22d3ee",
                     }}
-                    class="form-label"
-                    for="repeat-password"
+                    className="form-label"
+                    htmlFor="repeat-password"
                   >
                     <b>{passwordError ? passwordError : "Repeat Password"}</b>
                   </label>
@@ -162,7 +170,7 @@ function Registration({ setLoggedIn, setUser }) {
                         : "1px solid #22d3ee",
                     }}
                     onChange={(e) => handleChange(e)}
-                    class="form-input"
+                    className="form-input"
                     name="repeat-password"
                     type="password"
                     placeholder="Repeat your password here..."
