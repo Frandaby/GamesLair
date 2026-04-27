@@ -2,6 +2,7 @@
 import "../css/Registration.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { postRequest } from "../utilities";
 
 function Registration({ setLoggedIn, setUser }) {
   const navigate = useNavigate();
@@ -16,15 +17,8 @@ function Registration({ setLoggedIn, setUser }) {
   const [repeatedPassword, setRepeatedPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const mainEndpoint = `http://localhost:5000/`;
 
-  async function postRequest(endpoint, data) {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  }
   const handleClick = () => {
     navigate("/");
   };
@@ -35,12 +29,16 @@ function Registration({ setLoggedIn, setUser }) {
       return;
     } else {
       setPasswordError("");
-      const endpoint = `http://localhost:5000/auth${path}`;
+      const endpoint = mainEndpoint + `auth${path}`;
       const data = await postRequest(endpoint, userData);
       console.log(data.message || data.error);
       if (path == "/log-in" && data.token) {
         setErrorMessage("");
         localStorage.setItem("token", data.token);
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ id: data.user.id, email: data.user.email }),
+        );
         setLoggedIn(true);
         setUser({ id: data.user.id, email: data.user.email });
         navigate("/");

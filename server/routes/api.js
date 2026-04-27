@@ -1,16 +1,16 @@
 //Archivo con todo lo relacionado con request y response de la API utilizada
-const express = require("express");
+import express from "express";
 const router = express.Router();
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 const API_KEY = process.env.API_KEY;
+const baseAPI = "https://api.rawg.io/api/";
 
 //Esta ruta se utilizará cuando queramos volver a la página principal.
 router.get("/all", async (req, res) => {
   try {
     const page = req.query.page;
-    const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&page=${page}`,
-    );
+    const response = await fetch(baseAPI + `games?key=${API_KEY}&page=${page}`);
     const data = await response.json();
     res.json(data.results);
   } catch (error) {
@@ -22,9 +22,7 @@ router.get("/all", async (req, res) => {
 router.get("/details", async (req, res) => {
   try {
     const id = req.query.id;
-    const response = await fetch(
-      `https://api.rawg.io/api/games/${id}?key=${API_KEY}`,
-    );
+    const response = await fetch(baseAPI + `games/${id}?key=${API_KEY}`);
     const data = await response.json();
     res.json(data);
   } catch (error) {
@@ -74,7 +72,9 @@ router.get("/order-filter", async (req, res) => {
     if (platform && platform !== "999") {
       platformQuery = `&platforms=${platform}`;
     }
-    const endpoint = `https://api.rawg.io/api/games?key=${API_KEY}${genreQuery}${platformQuery}${selectedOrder.filter}${selectedOrder.ordering}&page=${page}`;
+    const endpoint =
+      baseAPI +
+      `games?key=${API_KEY}${genreQuery}${platformQuery}${selectedOrder.filter}${selectedOrder.ordering}&page=${page}`;
     const response = await fetch(endpoint);
     const data = await response.json();
     res.json(data.results);
@@ -89,7 +89,7 @@ router.get("/search", async (req, res) => {
   try {
     const query = req.query.query;
     const response = await fetch(
-      `https://api.rawg.io/api/games?key=${API_KEY}&search=${query}`,
+      baseAPI + `games?key=${API_KEY}&search=${query}`,
     );
     const data = await response.json();
     res.json(data.results);
@@ -103,7 +103,7 @@ router.get("/search", async (req, res) => {
 router.get("/genres", async (req, res) => {
   try {
     const response = await fetch(
-      `https://api.rawg.io/api/genres?key=${API_KEY}&ordering=name`,
+      baseAPI + `genres?key=${API_KEY}&ordering=name`,
     );
     const data = await response.json();
     const genres = data.results.map((genre) => ({
@@ -122,7 +122,7 @@ router.get("/genres", async (req, res) => {
 router.get("/platforms", async (req, res) => {
   try {
     const response = await fetch(
-      `https://api.rawg.io/api/platforms?key=${API_KEY}&ordering=-games_count`,
+      baseAPI + `platforms?key=${API_KEY}&ordering=-games_count`,
     );
     const data = await response.json();
     const platforms = data.results.map((platform) => ({
@@ -137,4 +137,4 @@ router.get("/platforms", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

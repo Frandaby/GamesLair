@@ -1,28 +1,12 @@
 //Archivo para todo lo relacionado con autenticación, contraseñas, token, y encriptación
-const database = require("../database");
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import express from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 const router = express.Router();
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 const SECRET = process.env.SECRET;
-
-//Para obtener el usuario, a través del email.
-async function getUser(email) {
-  const [rows] = await database.execute(
-    "SELECT * FROM users WHERE email = ? LIMIT 1",
-    [email.toLowerCase().trim()],
-  );
-  return rows[0];
-}
-
-//Crear user, pidiendo cuatro parámetros.
-async function createUser(firstName, lastName, email, passwordHash) {
-  return await database.execute(
-    "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
-    [firstName, lastName, email.toLowerCase().trim(), passwordHash],
-  );
-}
+import { getUser, createUser } from "../controllers/authControllers.js";
 
 //Endpoint para signup, con encriptación
 router.post("/sign-up", async (req, res) => {
@@ -75,4 +59,4 @@ router.post("/log-in", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

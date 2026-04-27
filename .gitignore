@@ -1,6 +1,4 @@
 node_modules/
 server/node_modules
-client/src/css/backup.css
-client/src/elements/backup.jsx
 
 .env

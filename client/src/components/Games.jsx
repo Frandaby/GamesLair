@@ -2,21 +2,33 @@
 import "../css/Games.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import Game from "./Game.jsx";
 
-function Games({ query, setSelectedGame, loggedIn, user }) {
+function Games({
+  order,
+  setOrder,
+  platform,
+  setPlatform,
+  genre,
+  setGenre,
+  setSearch,
+  query,
+  setQuery,
+  setSelectedGame,
+  loggedIn,
+  user,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
   const [games, setGames] = useState([]);
-  const [order, setOrder] = useState("");
-  const [platform, setPlatform] = useState("");
-  const [genre, setGenre] = useState("");
   const [searchedUser, setSearchedUser] = useState("");
   const [faves, setFaves] = useState({});
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const mainEndpoint = `http://localhost:5000/`;
 
   useEffect(() => {
     setGames([]);
@@ -29,7 +41,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
       setSearchedUser(user.email); // Con este endpoint determinamos que el primer usuario que salga por defecto seamos nosotros mismos, aunque luego busquemos al que sea.
     }
     if (path !== "/favourites") {
-      fetch("http://localhost:5000/api/genres")
+      fetch(mainEndpoint + "api/genres")
         .then((res) => {
           return res.json();
         })
@@ -40,7 +52,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
         .catch((error) => {
           console.error(error);
         });
-      fetch("http://localhost:5000/api/platforms")
+      fetch(mainEndpoint + "api/platforms")
         .then((res) => {
           return res.json();
         })
@@ -54,13 +66,15 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
     }
     let endpoint = "";
     if (path === "/favourites") {
-      endpoint = `http://localhost:5000/data/favourites?email=${searchedUser}`; // searchedUser cambia según lo que busquemos.
+      endpoint = mainEndpoint + `data/favourites?email=${searchedUser}`; // searchedUser cambia según lo que busquemos.
     } else if (query) {
-      endpoint = `http://localhost:5000/api/search?query=${query}`;
+      endpoint = mainEndpoint + `api/search?query=${query}`;
     } else if (order || platform || genre) {
-      endpoint = `http://localhost:5000/api/order-filter?platform=${platform}&genre=${genre}&order=${order}&page=${page}`;
+      endpoint =
+        mainEndpoint +
+        `api/order-filter?platform=${platform}&genre=${genre}&order=${order}&page=${page}`;
     } else {
-      endpoint = `http://localhost:5000/api/all?page=${page}`;
+      endpoint = mainEndpoint + `api/all?page=${page}`;
     }
 
     fetch(endpoint)
@@ -83,7 +97,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
         console.error(error);
       });
 
-    fetch(`http://localhost:5000/data/favourites?email=${user.email}`)
+    fetch(mainEndpoint + `data/favourites?email=${user?.email}`)
       .then((res) => {
         return res.json();
       })
@@ -123,78 +137,26 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
       text: "Oldest to newest",
     },
   ];
-  async function postRequest(endpoint, data, userID) {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        game: {
-          id: data.id,
-          name: data.name,
-          background_image: data.background_image,
-          released: data.released,
-          metacritic: data.metacritic,
-        },
-        userID: userID,
-      }),
-    });
-    return res.json();
-  }
-
-  //Función para borrar requests
-  async function deleteRequest(endpoint, data) {
-    const res = await fetch(endpoint, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  }
 
   const handleOrder = (e) => {
     const orderValue = e.target.value;
+    setQuery("");
+    setSearch("");
     setOrder(orderValue);
   };
+
   const handleGenre = (e) => {
     const genreValue = e.target.value;
+    setQuery("");
+    setSearch("");
     setGenre(genreValue);
   };
+
   const handlePlatform = (e) => {
     const platformValue = e.target.value;
+    setQuery("");
+    setSearch("");
     setPlatform(platformValue);
-  };
-
-  const handleFav = (fav) => {
-    if (loggedIn) {
-      const currentFav = !!faves[fav.id]; // Estado actual de favourite
-      const newFav = !currentFav; // Estado cambiado de favourite
-
-      setFaves((current) => ({
-        ...current,
-        [fav.id]: newFav,
-      }));
-
-      const endpoint = `http://localhost:5000/data/favourites`;
-
-      if (newFav) {
-        postRequest(endpoint, fav, user.id);
-      } else {
-        deleteRequest(endpoint, { userID: user.id, apiID: fav.id });
-      }
-    } else {
-      navigate("/log-in");
-    }
-  };
-
-  const handleSelectedGame = (id, slug) => {
-    fetch(`http://localhost:5000/api/details?id=${id}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setSelectedGame(data);
-        navigate(`/${slug}`);
-      });
   };
 
   const handleUserSearch = (e) => {
@@ -213,6 +175,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
                 Order by:
               </label>
               <select
+                value={order}
                 onChange={handleOrder}
                 className="filter-input"
                 name="order"
@@ -230,6 +193,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
                 Genre:
               </label>
               <select
+                value={genre}
                 onChange={handleGenre}
                 className="filter-input"
                 name="genre"
@@ -247,6 +211,7 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
                 Platform:
               </label>
               <select
+                value={platform}
                 onChange={handlePlatform}
                 className="filter-input"
                 name="platform"
@@ -274,43 +239,15 @@ function Games({ query, setSelectedGame, loggedIn, user }) {
         )}
         <div className="games">
           {games.map((game) => (
-            <div className="game-card" key={game.id}>
-              {/*ADDED UNIQUE KEY */}
-              <div className="game-name-div">
-                <h2 className="game-name">{game.name}</h2>
-              </div>
-              {game.background_image && (
-                <img className="game-image" src={game.background_image} />
-              )}
-              <div className="game-details">
-                <p className="details-text">
-                  <span className="details-bold">Score: </span>
-                  {game.metacritic}
-                </p>
-                <p className="details-text">
-                  <span className="details-bold">Release data: </span>
-                  {game?.released?.slice(0, 4)}{" "}
-                  {/*La función slice elimina los caracteres no incluidos 
-                  (en este caso solo deja los 5 primeros, el año)
-                  La ? en React actúa del mismo modo que IF NOT EXISTs de MySQL */}
-                </p>
-                <button
-                  onClick={() => handleSelectedGame(game.id, game.slug)}
-                  className="game-button"
-                >
-                  Game details
-                </button>
-                <i
-                  key={game.id}
-                  onClick={() => handleFav(game)}
-                  className={
-                    faves[game.id]
-                      ? "fas fa-heart fas-fa-heart"
-                      : "far fa-heart far-fa-heart"
-                  }
-                ></i>
-              </div>
-            </div>
+            <Game
+              key={game.id}
+              game={game}
+              loggedIn={loggedIn}
+              faves={faves}
+              setFaves={setFaves}
+              user={user}
+              setSelectedGame={setSelectedGame}
+            />
           ))}
         </div>
         {hasMore && (

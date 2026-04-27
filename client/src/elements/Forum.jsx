@@ -1,13 +1,16 @@
 import "../css/Forum.css";
 import { useState, useEffect } from "react";
+import { postForumRequest, formatDate } from "../utilities";
 
 function Forum({ user }) {
   const [postData, setPostData] = useState({ title: "", content: "" });
   const [posts, setPosts] = useState([]);
   const [commentData, setCommentData] = useState({ content: "", postID: "" });
   const [comments, setComments] = useState([]);
+  const mainEndpoint = `http://localhost:5000/`;
+
   useEffect(() => {
-    fetch("http://localhost:5000/data/forum")
+    fetch(mainEndpoint + "data/forum")
       .then((res) => {
         return res.json();
       })
@@ -18,7 +21,7 @@ function Forum({ user }) {
         console.error(error);
       });
 
-    fetch("http://localhost:5000/data/forum/comments")
+    fetch(mainEndpoint + "data/forum/comments")
       .then((res) => {
         return res.json();
       })
@@ -30,32 +33,21 @@ function Forum({ user }) {
       });
   }, [posts, comments]);
 
-  async function postRequest(endpoint, data, userID) {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: data,
-        userID: userID,
-      }),
-    });
-    return res.json();
-  }
-
   const handleSubmit = async (e, text) => {
     let endpoint;
     e.preventDefault();
     if (text == "post") {
-      endpoint = `http://localhost:5000/data/forum`;
-      const data = await postRequest(endpoint, postData, user.id);
+      endpoint = mainEndpoint + `data/forum`;
+      const data = await postForumRequest(endpoint, postData, user.id);
     } else {
-      endpoint = `http://localhost:5000/data/forum/comments`;
-      const data = await postRequest(endpoint, commentData, user.id);
+      endpoint = mainEndpoint + `data/forum/comments`;
+      const data = await postForumRequest(endpoint, commentData, user.id);
     }
     setTimeout(() => {
       e.target.reset();
     }, 300);
   };
+
   const handleChange = (e, text, postID = null) => {
     if (text == "post") {
       e.target.style.height = "auto";
@@ -70,6 +62,7 @@ function Forum({ user }) {
       });
     }
   };
+
   return (
     <>
       <div id="forum">
@@ -103,19 +96,7 @@ function Forum({ user }) {
               {/*ADDED UNIQUE KEY*/}
               <div className="post-data">
                 <p>{post.email}</p>
-                <p>
-                  {post?.created_at
-                    ?.slice(0, 10)
-                    .split("-")
-                    .reverse()
-                    .join("-") +
-                    " at " +
-                    post?.created_at
-                      ?.slice(11, 19)
-                      .split("-")
-                      .reverse()
-                      .join("-")}
-                </p>
+                <p>{formatDate(post?.created_at)}</p>
               </div>
               <div className="post-text">
                 <h3 className="post-title">{post.title}</h3>
@@ -124,7 +105,7 @@ function Forum({ user }) {
               <div>
                 <div
                   style={{
-                    "border-bottom": comments.some(
+                    borderBottom: comments.some(
                       (comment) => comment.post_id === post.id,
                     )
                       ? "1px solid white"
@@ -154,19 +135,7 @@ function Forum({ user }) {
                         {/*ADDED UNIQUE KEY*/}
                         <div className="comment-data">
                           <p>{comment.email}</p>
-                          <p>
-                            {comment?.created_at
-                              ?.slice(0, 10)
-                              .split("-")
-                              .reverse()
-                              .join("-") +
-                              " at " +
-                              comment?.created_at
-                                ?.slice(11, 19)
-                                .split("-")
-                                .reverse()
-                                .join("-")}
-                          </p>
+                          <p>{formatDate(comment?.created_at)}</p>
                         </div>
                         <div className="comment-text">
                           <p>{comment.content}</p>

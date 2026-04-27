@@ -18,21 +18,38 @@ function App() {
   const [query, setQuery] = useState("");
   const [toggle, setToggle] = useState(true);
   const [selectedGame, setSelectedGame] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(null);
   const [user, setUser] = useState({});
+  const [search, setSearch] = useState(""); //setSearch cambia el valor de la variable
+  const [order, setOrder] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [genre, setGenre] = useState("");
 
   useEffect(() => {
-    setLoggedIn(!!localStorage.getItem("token"));
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (token && user) {
+      setLoggedIn(true);
+      setUser(JSON.parse(user));
+    } else {
+      setLoggedIn(false);
+      setUser({});
+    }
   }, []);
 
   return (
     <>
       <Router>
         <Header
+          setGenre={setGenre}
+          setPlatform={setPlatform}
+          setOrder={setOrder}
           setQuery={setQuery}
           loggedIn={loggedIn}
           setLoggedIn={setLoggedIn}
           setUser={setUser}
+          search={search}
+          setSearch={setSearch}
         />
         <div id="main-body">
           <Sidebar toggle={toggle} setToggle={setToggle} />
@@ -42,9 +59,17 @@ function App() {
                 path="/"
                 element={
                   <Games
+                    order={order}
+                    setOrder={setOrder}
+                    platform={platform}
+                    setPlatform={setPlatform}
+                    genre={genre}
+                    setGenre={setGenre}
+                    setSearch={setSearch}
                     user={user}
                     setSelectedGame={setSelectedGame}
                     query={query}
+                    setQuery={setQuery}
                     loggedIn={loggedIn}
                   />
                 }
@@ -67,7 +92,9 @@ function App() {
                 />
                 <Route
                   path="/sign-up"
-                  element={<Registration setUser={setUser} setLoggedIn={""} />}
+                  element={
+                    <Registration setUser={setUser} setLoggedIn={setLoggedIn} />
+                  }
                 />
               </Route>
               <Route
@@ -85,8 +112,16 @@ function App() {
                 element={
                   loggedIn ? (
                     <Games
+                      order={order}
+                      setOrder={setOrder}
+                      platform={platform}
+                      setPlatform={setPlatform}
+                      genre={genre}
+                      setGenre={setGenre}
+                      setSearch={setSearch}
                       user={user}
                       setSelectedGame={setSelectedGame}
+                      setQuery={setQuery}
                       query={query}
                       loggedIn={loggedIn}
                     />

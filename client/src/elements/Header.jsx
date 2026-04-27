@@ -14,16 +14,29 @@ import { useNavigate, useLocation } from "react-router-dom";
   useNavigate() -> Cambia de página o ruta desde el código
   useLocation() -> Lee información de la URL actual */
 
-function Header({ setQuery, loggedIn, setLoggedIn, setUser }) {
+function Header({
+  setOrder,
+  setPlatform,
+  setGenre,
+  search,
+  setSearch,
+  setQuery,
+  loggedIn,
+  setLoggedIn,
+  setUser,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [search, setSearch] = useState(""); //setSearch cambia el valor de la variable
+
   const handleRegistration = (type) => {
     navigate(`/${type}`);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
+      setOrder("");
+      setPlatform("");
+      setGenre("");
       e.preventDefault();
       setQuery(search);
       navigate("/");
@@ -32,6 +45,7 @@ function Header({ setQuery, loggedIn, setLoggedIn, setUser }) {
 
   const handleLogOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setLoggedIn(false);
     setUser({});
     if (location.pathname == "/") {

@@ -2,6 +2,8 @@
 import "../css/GameCard.css";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Form from "../components/Form.jsx";
+import { getColour, getAverageScore, formatDate } from "../utilities.js";
 
 function GameCard({ selectedGame, user, loggedIn }) {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ function GameCard({ selectedGame, user, loggedIn }) {
     tags: [],
     userID: "",
   });
+  const mainEndpoint = `http://localhost:5000/`;
   const pegiConfiguration = {
     1: "pegi_7.png",
     2: "pegi_12.png",
@@ -26,40 +29,12 @@ function GameCard({ selectedGame, user, loggedIn }) {
   const length = 244;
   const isLong = selectedGame?.description_raw?.length > length;
 
-  const getColour = (score) => {
-    if (score < 50) {
-      return "red";
-    } else if (score <= 75) {
-      return "orange";
-    } else {
-      return "green";
-    }
-  };
-
-  const getAverageScore = () => {
-    return Math.round(
-      reviews.reduce((sum, review) => sum + review.score, 0) / reviews.length,
-    );
-  };
-
-  async function postRequest(endpoint, data) {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: data,
-        game: selectedGame,
-      }),
-    });
-    return res.json();
-  }
-
   const getReviews = () => {
-    fetch(`http://localhost:5000/data/reviews?gameID=${selectedGame.id}`)
+    fetch(mainEndpoint + `data/reviews?gameID=${selectedGame.id}`)
       .then((res) => res.json())
       .then((data) => {
         setReviews(data);
-        setHasReview(data.some((review) => review.user_id === user?.id));
+        setHasReview(data?.some((review) => review.user_id === user?.id));
       })
       .catch((error) => console.error(error));
   };
@@ -72,7 +47,7 @@ function GameCard({ selectedGame, user, loggedIn }) {
       }));
     }
 
-    fetch("http://localhost:5000/data/tags")
+    fetch(mainEndpoint + "data/tags")
       .then((res) => {
         return res.json();
       })
@@ -90,33 +65,6 @@ function GameCard({ selectedGame, user, loggedIn }) {
     navigate(-1); //Con esta funcionalidad React vuelve a la página anterior a la acción sin tener que hacer una ruta.
   };
 
-  const handleTag = (tagID) => {
-    setReviewData((prev) => {
-      const isSelected = prev.tags.includes(tagID);
-      return {
-        ...prev,
-        tags: isSelected
-          ? prev.tags.filter((id) => id !== tagID)
-          : [...prev.tags, tagID],
-      };
-    });
-  };
-
-  const handleReview = async (e) => {
-    const endpoint = `http://localhost:5000/data/reviews`;
-    e.preventDefault();
-    const data = await postRequest(endpoint, reviewData);
-    setTimeout(() => {
-      setReviewData({
-        text: "",
-        score: 50,
-        tags: [],
-        userID: user?.id || "",
-      });
-      e.target.reset();
-    }, 300);
-    getReviews();
-  };
   return (
     <>
       <div id="overlay" onClick={handleClick}>
@@ -182,9 +130,9 @@ function GameCard({ selectedGame, user, loggedIn }) {
                   </div>
                   <h3
                     className="average-score"
-                    style={{ color: getColour(getAverageScore()) }}
+                    style={{ color: getColour(getAverageScore(reviews)) }}
                   >
-                    {getAverageScore()}/100
+                    {getAverageScore(reviews)}/100
                   </h3>
                 </>
               )}
@@ -197,57 +145,14 @@ function GameCard({ selectedGame, user, loggedIn }) {
             {loggedIn && (
               <div>
                 {!hasReview && (
-                  <form id="review-form" onSubmit={handleReview}>
-                    <textarea
-                      id="review-input"
-                      onChange={(e) =>
-                        setReviewData((prev) => ({
-                          ...prev,
-                          text: e.target.value.trim(),
-                        }))
-                      }
-                      placeholder="What did you think of the game?"
-                    />
-                    <div id="review-score">
-                      <label>
-                        Your Score: <strong>{reviewData.score}</strong>/100
-                      </label>
-                      <input
-                        id="score-range"
-                        type="range"
-                        min="1"
-                        max="100"
-                        style={{ "--value": `${reviewData.score}%` }}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setReviewData((prev) => ({
-                            ...prev,
-                            score: Number(value),
-                          }));
-                          e.target.style.setProperty("--value", `${value}%`);
-                        }}
-                      />
-                    </div>
-                    <div id="tags-div">
-                      {tags.map((tag) => (
-                        <button
-                          key={tag.id}
-                          type="button"
-                          onClick={() => handleTag(tag.id)}
-                          className={
-                            reviewData.tags.includes(tag.id)
-                              ? "tag tag-selected"
-                              : "tag"
-                          }
-                        >
-                          {tag.name}
-                        </button>
-                      ))}
-                    </div>
-                    <button id="review-button" type="submit">
-                      Post Review
-                    </button>
-                  </form>
+                  <Form
+                    getReviews={getReviews}
+                    setReviewData={setReviewData}
+                    reviewData={reviewData}
+                    tags={tags}
+                    user={user}
+                    selectedGame={selectedGame}
+                  />
                 )}
                 {reviews.length > 0 && (
                   <div className="titles">
@@ -262,17 +167,9 @@ function GameCard({ selectedGame, user, loggedIn }) {
                         <div className="review-data">
                           <p>{review.email}</p>
                           <p>
-                            {(review?.updated_at || review?.created_at)
-                              ?.slice(0, 10)
-                              .split("-")
-                              .reverse()
-                              .join("-") +
-                              " at " +
-                              (review?.updated_at || review?.created_at)
-                                ?.slice(11, 19)
-                                .split("-")
-                                .reverse()
-                                .join("-")}
+                            {formatDate(
+                              review?.updated_at || review?.created_at,
+                            )}
                           </p>
                         </div>
                         <div className="game-card-review">

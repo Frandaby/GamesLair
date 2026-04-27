@@ -1,9 +1,10 @@
-const express = require("express");
-const cors = require("cors"); //CORS se utiliza más para permisos. Necesitamos su permiso para acceder
-const apiRoutes = require("./routes/api.js");
-const authRoutes = require("./routes/auth.js");
-const dataRoutes = require("./routes/data.js");
-require("dotenv").config();
+import express from "express";
+import cors from "cors"; //CORS se utiliza más para permisos. Necesitamos su permiso para acceder
+import apiRoutes from "./routes/api.js";
+import authRoutes from "./routes/auth.js";
+import dataRoutes from "./routes/data.js";
+import dotenv from "dotenv";
+dotenv.config();
 const PORT = process.env.PORT;
 
 const app = express();

@@ -2,19 +2,16 @@
 
 import "../css/Rankings.css";
 import { useState, useEffect } from "react";
+import { formatTag } from "../utilities";
 
 function Rankings({ toggle }) {
   const [toggleRanking, setToggleRanking] = useState(null);
   //Esta función cambia el nombre en el frontend de los tags para que los muestre en mayúscula y con espacio.
-  function formatTag(tag) {
-    return tag
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  }
   const [rankings, setRankings] = useState([]);
+  const mainEndpoint = `http://localhost:5000/`;
+
   useEffect(() => {
-    const endpoint = `http://localhost:5000/data/rankings`;
+    const endpoint = mainEndpoint + `data/rankings`;
     fetch(endpoint)
       .then((res) => {
         return res.json();
