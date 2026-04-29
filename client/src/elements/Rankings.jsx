@@ -3,6 +3,7 @@
 import "../css/Rankings.css";
 import { useState, useEffect } from "react";
 import { formatTag } from "../utilities";
+import Scroll from "../components/Scroll";
 
 function Rankings({ toggle }) {
   const [toggleRanking, setToggleRanking] = useState(null);
@@ -35,36 +36,47 @@ function Rankings({ toggle }) {
           <h2 id="ranking-header">Rankings</h2>
           {rankings.map((ranking) => (
             <div className="ranking" key={ranking.tag_name}>
-              {/*ADDED UNIQUE KEY*/}
-              <h3
-                className="tag-header"
+              <div
+                className="ranking-header-div"
                 onClick={() => handleClick(ranking.tag_name)}
               >
-                {formatTag(ranking.tag_name)}
-              </h3>
+                <h3 className="tag-header">{formatTag(ranking.tag_name)}</h3>
+                <i
+                  className={`fas ${
+                    toggleRanking === ranking.tag_name
+                      ? "fa-angle-up"
+                      : "fa-angle-down"
+                  }`}
+                ></i>
+              </div>
               {/*Relacionamos toggleRanking con ranking.tag_name para que solo muestre la tabla del ranking en el que hacemos click. */}
               {toggleRanking === ranking.tag_name && (
                 <table className="ranking-table">
                   <tbody>
-                    {ranking.top_games.map((game) => (
-                      <tr key={game.id}>
-                        {/*ADDED UNIQUE KEY */}
-                        <td className="rank">{game.rank}</td>
-                        <td>
-                          <div className="image-container">
-                            <img src={game.image_url} className="game-image" />
-                          </div>
-                        </td>
-                        <td>{game.game_name}</td>
-                        <td>({game.tag_count})</td>
-                      </tr>
-                    ))}
+                    {[...ranking.top_games]
+                      .sort((a, b) => a.rank - b.rank)
+                      .map((game) => (
+                        <tr key={game.id}>
+                          <td className="rank">{game.rank}</td>
+                          <td>
+                            <div className="image-container">
+                              <img
+                                src={game.image_url}
+                                className="game-image"
+                              />
+                            </div>
+                          </td>
+                          <td>{game.game_name}</td>
+                          <td>({game.tag_count})</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               )}
             </div>
           ))}
         </div>
+        <Scroll />
       </div>
     </>
   );

@@ -150,7 +150,6 @@ router.post("/reviews", async (req, res) => {
   try {
     const { data, game } = req.body;
     let gameID;
-
     const existingGame = await getGame(game.id); // Esta propiedad del id viene directamente del API...
 
     if (existingGame) {

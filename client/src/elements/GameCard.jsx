@@ -69,6 +69,9 @@ function GameCard({ selectedGame, user, loggedIn }) {
     <>
       <div id="overlay" onClick={handleClick}>
         <div id="popup" onClick={(e) => e.stopPropagation()}>
+          <span className="fas fa-times close-icon" onClick={handleClick}>
+            {/*Para añadir X cancelar a la ficha del juego */}
+          </span>
           <div id="image-column">
             <h2 id="expanded-title">{selectedGame?.name}</h2>
             {selectedGame?.background_image && (

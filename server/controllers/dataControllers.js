@@ -153,10 +153,11 @@ export async function getUserReviews(userID) {
 }
 
 export async function createReview(text, score, gameID, userID) {
-  await database.execute(
+  const [result] = await database.execute(
     "INSERT INTO reviews (user_id, game_id, review_text, score) VALUES (?, ?, ?, ?)",
     [userID, gameID, text, score],
   );
+  return result.insertId;
 }
 
 export async function deleteReview(reviewID) {

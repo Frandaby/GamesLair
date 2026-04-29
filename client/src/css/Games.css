@@ -104,6 +104,44 @@
   border: none;
 }
 
+#scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #22d3ee;
+  color: #020617;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+#scroll-top.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#scroll-top:hover {
+  background-color: #e879f9;
+  transform: scale(1.15);
+}
+
+#no-games-msg {
+  font-size: xx-large;
+  padding-top: 2%;
+  text-align: center;
+  color: red;
+}
+
 /*RESPONSIVE*/
 @media (max-width: 1024px) {
   #main-page {
@@ -126,5 +164,15 @@
       width: 100% !important;
       margin-left: 0 !important;
     }
+  }
+
+  #scroll-top {
+    bottom: 20px;
+    right: 20px;
+
+    width: 45px;
+    height: 45px;
+
+    font-size: 18px;
   }
 }

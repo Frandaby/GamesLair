@@ -1,16 +1,11 @@
 //En Reviews.jsx manejaremos la opción reviews de la sidebar (gestión de reviews propias, update/delete)
 import "../css/Reviews.css";
 import Review from "../components/Review.jsx";
+import Scroll from "../components/Scroll.jsx";
 import { useState, useEffect } from "react";
 
 function Reviews({ user }) {
   const [reviews, setReviews] = useState([]);
-  const [editID, setEditID] = useState(null);
-  const [updatedReview, setUpdatedReview] = useState({
-    score: "",
-    text: "",
-    tags: [],
-  });
   const [tags, setTags] = useState([]);
   const mainEndpoint = `http://localhost:5000/`;
 
@@ -50,16 +45,13 @@ function Reviews({ user }) {
           {reviews.map((review) => (
             <Review
               key={review.id}
-              setEditID={setEditID}
               getReviews={getReviews}
               review={review}
-              editID={editID}
-              updatedReview={updatedReview}
-              setUpdatedReview={setUpdatedReview}
               tags={tags}
             />
           ))}
         </div>
+        <Scroll />
       </div>
     </>
   );

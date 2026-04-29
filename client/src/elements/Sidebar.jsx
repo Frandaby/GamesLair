@@ -1,12 +1,12 @@
 //Barra lateral de la página y su funcionalidad
 import "../css/Sidebar.css";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react"; // 1. Importamos useEffect (RESPONSIVE STEPS)
+import { useEffect } from "react"; // 1. Importamos useEffect
 
 //Función para crear la barra lateral colapsable
 function Sidebar({ toggle, setToggle }) {
   const navigate = useNavigate();
-  // 2. Lógica para cerrar el sidebar automáticamente en móviles al cargar (RESPONSIVE STEPS: Line 9 to 25)
+  // 2. Lógica para cerrar el sidebar automáticamente en móviles al cargar
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -19,16 +19,24 @@ function Sidebar({ toggle, setToggle }) {
     // Ejecutamos una vez al montar el componente
     handleResize();
 
-    // Opcional: Escuchar cambios de tamaño en tiempo real
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [setToggle]); // Solo se ejecuta al inicio (END RESPONSIVE STEP)
+  }, [setToggle]); // Solo se ejecuta al inicio
 
   const handleToggle = () => {
     setToggle(!toggle);
   };
 
-  //With RESPONSIVE (Original below)
+  //RESPONSIVE
+
+  //Función para colapsar el sidebar en móvil cuando seleccionamos un elemento
+  const handleNavigation = (path) => {
+    navigate(path);
+
+    if (window.innerWidth <= 768) {
+      setToggle(false);
+    }
+  };
 
   return (
     <>
@@ -53,33 +61,28 @@ function Sidebar({ toggle, setToggle }) {
         <ul id="nav-list" className={toggle ? "" : "collapsed"}>
           <li
             className={`nav-element ${toggle ? "" : "element-collapsed"}`}
-            onClick={() => {
-              navigate("/reviews");
-            }}
+            onClick={() => handleNavigation("/reviews")}
           >
             Reviews
           </li>
+
           <li
             className={`nav-element ${toggle ? "" : "element-collapsed"}`}
-            onClick={() => {
-              navigate("/rankings");
-            }}
+            onClick={() => handleNavigation("/rankings")}
           >
             Rankings
           </li>
+
           <li
             className={`nav-element ${toggle ? "" : "element-collapsed"}`}
-            onClick={() => {
-              navigate("/favourites");
-            }}
+            onClick={() => handleNavigation("/favourites")}
           >
             Favourites
           </li>
+
           <li
             className={`nav-element ${toggle ? "" : "element-collapsed"}`}
-            onClick={() => {
-              navigate("/forum");
-            }}
+            onClick={() => handleNavigation("/forum")}
           >
             Forum
           </li>

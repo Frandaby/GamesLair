@@ -1,24 +1,58 @@
 #main-footer {
-  display: flex;
-  justify-content: space-between;
-  padding: 3%;
+  background-color: #020617;
   color: white;
-  background-color: #650313;
   text-align: center;
+  padding: 20px 10px;
+  border-top: 1px solid #22d3ee;
 }
 
-#email-link {
-  color: white;
-}
-
-#email-link:visited {
-  color: white;
-}
-
-#email-link:hover {
-  color: lightgray;
+#main-footer p {
+  margin: 5px 0;
+  font-size: 1rem;
 }
 
 #email-span {
-  font-weight: bold;
+  color: #22d3ee;
+}
+
+#email-link {
+  color: #e879f9;
+  text-decoration: none;
+}
+
+#email-link:hover {
+  text-decoration: underline;
+}
+
+/*RESPONSIVE */
+
+@media (max-width: 768px) {
+  #main-footer {
+    padding: 15px 10px;
+  }
+
+  #main-footer p {
+    font-size: 0.9rem;
+  }
+
+  #email-link {
+    display: inline-block;
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  #main-footer {
+    padding: 20px 5px;
+  }
+
+  #main-footer p {
+    font-size: 0.8rem;
+  }
+
+  #email-link {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+  }
 }

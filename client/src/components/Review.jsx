@@ -2,22 +2,21 @@ import "../css/Review.css";
 import TextareaAutosize from "react-textarea-autosize";
 // https://www.youtube.com/watch?v=vOftV4_roOQ&t=104s
 import { deleteRequest, putRequest, getColour, formatDate } from "../utilities";
+import { useState } from "react";
 
-function Review({
-  review,
-  editID,
-  setEditID,
-  getReviews,
-  updatedReview,
-  setUpdatedReview,
-  tags,
-}) {
+function Review({ review, getReviews, tags }) {
+  const [editID, setEditID] = useState(null);
+  const [updatedReview, setUpdatedReview] = useState({
+    score: "",
+    text: "",
+    tags: [],
+  });
   const mainEndpoint = `http://localhost:5000/`;
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     // Primero tenemos que especificar cuál review borrar
     const endpoint = mainEndpoint + `data/reviews`;
-    deleteRequest(endpoint, { reviewID: id });
+    await deleteRequest(endpoint, { reviewID: id });
     // Segundo hay que usar una query para borrar los datos de la BBDD
     getReviews();
     // Tercero hay que mostrar la nueva actualización
@@ -49,6 +48,11 @@ function Review({
     }
   };
 
+  const handleClick = () => {
+    setEditID(null);
+    setUpdatedReview({});
+  };
+
   const handleTag = (tagID) => {
     setUpdatedReview((prev) => {
       const isSelected = prev.tags.includes(tagID);
@@ -63,9 +67,11 @@ function Review({
   return (
     <>
       <div className="review-div" key={review.id}>
-        {/*ADDED UNIQUE KEY*/}
         {editID === review.id ? (
           <>
+            <span className="fas fa-times close-icon" onClick={handleClick}>
+              {/*Para añadir X cancelar a la ficha del juego */}
+            </span>
             <div className="date-name-div">
               <h3 className="title">{review.game}</h3>
               <h3 className="date">
@@ -144,7 +150,6 @@ function Review({
               {review?.tags?.map((tag) => (
                 <p className="review-tag" key={tag.id}>
                   {tag.name}
-                  {/*ADDED UNIQUE KEY*/}
                 </p>
               ))}
             </div>

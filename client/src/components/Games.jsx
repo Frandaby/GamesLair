@@ -3,6 +3,7 @@ import "../css/Games.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import Game from "./Game.jsx";
+import Scroll from "./Scroll.jsx";
 
 function Games({
   order,
@@ -28,6 +29,7 @@ function Games({
   const [faves, setFaves] = useState({});
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(true);
   const mainEndpoint = `http://localhost:5000/`;
 
   useEffect(() => {
@@ -37,9 +39,12 @@ function Games({
   }, [order, genre, platform, query, path, searchedUser]);
 
   useEffect(() => {
+    setLoading(true);
     if (user?.email && !searchedUser) {
-      setSearchedUser(user.email); // Con este endpoint determinamos que el primer usuario que salga por defecto seamos nosotros mismos, aunque luego busquemos al que sea.
+      setSearchedUser(user.email); // Con este endpoint determinamos que el primer
+      //usuario que salga por defecto seamos nosotros mismos, aunque luego busquemos al que sea.
     }
+
     if (path !== "/favourites") {
       fetch(mainEndpoint + "api/genres")
         .then((res) => {
@@ -92,9 +97,12 @@ function Games({
         if (data.length < 20) {
           setHasMore(false);
         }
+
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
       });
 
     fetch(mainEndpoint + `data/favourites?email=${user?.email}`)
@@ -106,8 +114,9 @@ function Games({
           acc[game.id] = true;
           return acc;
         }, {});
-        //Con este fetch siempre veremos los favoritos que tenemos guardado en nuestro usuario, y otros usuarios podrán verlos también cuando busquen nuestro perfil, al permanecer marcados.
 
+        //Con este fetch siempre veremos los favoritos que tenemos guardado en nuestro usuario,
+        //y otros usuarios podrán verlos también cuando busquen nuestro perfil, al permanecer marcados.
         setFaves(favourites);
       })
       .catch((error) => {
@@ -237,20 +246,25 @@ function Games({
             ></input>
           </div>
         )}
-        <div className="games">
-          {games.map((game) => (
-            <Game
-              key={game.id}
-              game={game}
-              loggedIn={loggedIn}
-              faves={faves}
-              setFaves={setFaves}
-              user={user}
-              setSelectedGame={setSelectedGame}
-            />
-          ))}
-        </div>
-        {hasMore && (
+        {games.length > 0 && (
+          <div className="games">
+            {games.map((game) => (
+              <Game
+                key={game.id}
+                game={game}
+                loggedIn={loggedIn}
+                faves={faves}
+                setFaves={setFaves}
+                user={user}
+                setSelectedGame={setSelectedGame}
+              />
+            ))}
+          </div>
+        )}{" "}
+        {!loading && games.length === 0 && (
+          <h2 id="no-games-msg">No games found!</h2>
+        )}
+        {!loading && hasMore && (
           <div className="see-more-div">
             <button
               onClick={() => setPage((prev) => prev + 1)}
@@ -260,6 +274,7 @@ function Games({
             </button>
           </div>
         )}
+        <Scroll />
       </div>
       <Outlet />
     </>

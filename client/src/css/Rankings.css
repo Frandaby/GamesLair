@@ -6,6 +6,7 @@
   justify-content: center;
   transition: width 0.3s ease;
   height: 100%;
+  min-height: 100vh;
 }
 
 #ranking-container {
@@ -57,6 +58,61 @@
 
 .rank {
   font-size: x-large;
+}
+
+#scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #22d3ee;
+  color: #020617;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+#scroll-top.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#scroll-top:hover {
+  background-color: #e879f9;
+  transform: scale(1.15);
+}
+
+.ranking-header-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fa-angle-down {
+  font-size: xx-large;
+}
+
+.fa-angle-down:hover {
+  color: #22d3ee;
+  cursor: pointer;
+}
+
+.fa-angle-up {
+  font-size: xx-large;
+}
+
+.fa-angle-up:hover {
+  color: #22d3ee;
+  cursor: pointer;
 }
 
 /* RESPONSIVE */
@@ -115,5 +171,15 @@
 
   .ranking-table td:nth-child(3) {
     padding-right: 10px;
+  }
+
+  #scroll-top {
+    bottom: 20px;
+    right: 20px;
+
+    width: 45px;
+    height: 45px;
+
+    font-size: 18px;
   }
 }

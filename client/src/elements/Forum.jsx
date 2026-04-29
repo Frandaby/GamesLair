@@ -1,5 +1,6 @@
 import "../css/Forum.css";
 import { useState, useEffect } from "react";
+import Scroll from "../components/Scroll";
 import { postForumRequest, formatDate } from "../utilities";
 
 function Forum({ user }) {
@@ -93,7 +94,6 @@ function Forum({ user }) {
         <div className="posts">
           {posts.map((post) => (
             <div className="post-body" key={post.id}>
-              {/*ADDED UNIQUE KEY*/}
               <div className="post-data">
                 <p>{post.email}</p>
                 <p>{formatDate(post?.created_at)}</p>
@@ -132,7 +132,6 @@ function Forum({ user }) {
                     .filter((comment) => comment.post_id === post.id)
                     .map((comment) => (
                       <div className="comment-body" key={comment.id}>
-                        {/*ADDED UNIQUE KEY*/}
                         <div className="comment-data">
                           <p>{comment.email}</p>
                           <p>{formatDate(comment?.created_at)}</p>
@@ -147,6 +146,7 @@ function Forum({ user }) {
             </div>
           ))}
         </div>
+        <Scroll />
       </div>
     </>
   );

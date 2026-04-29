@@ -1,6 +1,7 @@
 import "../css/Game.css";
 import { useNavigate } from "react-router-dom";
 import { postFavRequest, deleteRequest } from "../utilities";
+import logo from "../assets/games-lair-logo.png";
 
 function Game({ game, loggedIn, faves, setFaves, user, setSelectedGame }) {
   const navigate = useNavigate();
@@ -41,21 +42,20 @@ function Game({ game, loggedIn, faves, setFaves, user, setSelectedGame }) {
   return (
     <>
       <div className="game-card" key={game.id}>
-        {/*ADDED UNIQUE KEY */}
         <div className="game-name-div">
           <h2 className="game-name">{game.name}</h2>
         </div>
-        {game.background_image && (
-          <img className="game-image" src={game.background_image} />
-        )}
+        <div className="game-image-div">
+          <img className="game-image" src={game.background_image || logo} />
+        </div>
         <div className="game-details">
           <p className="details-text">
             <span className="details-bold">Score: </span>
-            {game.metacritic}
+            {game.metacritic ?? "N/A"}
           </p>
           <p className="details-text">
             <span className="details-bold">Release data: </span>
-            {game?.released?.slice(0, 4)}{" "}
+            {game?.released?.slice(0, 4) || "N/A"}{" "}
             {/*La función slice elimina los caracteres no incluidos 
                   (en este caso solo deja los 5 primeros, el año)
                   La ? en React actúa del mismo modo que IF NOT EXISTs de MySQL */}

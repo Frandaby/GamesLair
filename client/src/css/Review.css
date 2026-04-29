@@ -2,11 +2,12 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 2%;
-  padding: 2% 4%;
+  padding: 3% 4%;
   border-style: solid;
   border-color: #e879f9;
   box-shadow: 0 0 10px #e995f6;
   border-radius: 15px;
+  position: relative;
 }
 
 .date-name-div {
@@ -171,6 +172,21 @@
 
 .tags-div {
   padding-top: 2%;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  z-index: 50;
+  display: block;
+}
+.close-icon:hover {
+  color: #22d3ee;
 }
 
 @media (max-width: 768px) {
