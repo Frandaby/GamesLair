@@ -70,7 +70,9 @@
   color: #eaeaff;
   border: 1px solid #22d3ee;
   border-radius: 30px;
-  width: 25%;
+  width: 300px;
+  max-width: 90%;
+  padding: 10px;
   padding: 0.5%;
   font-family: "Science Gothic", sans-serif;
   font-size: large;
@@ -174,5 +176,12 @@
     height: 45px;
 
     font-size: 18px;
+  }
+
+  #user-search-div {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center;
   }
 }

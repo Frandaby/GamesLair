@@ -50,10 +50,11 @@ function Forum({ user }) {
   };
 
   const handleChange = (e, text, postID = null) => {
+    e.target.style.height = "auto";
+    e.target.style.height = e.target.scrollHeight + "px";
+    //Esto nos permite que el input de las áreas de texto crezcan conforme escribimos y cambiamos de renglon.
+
     if (text == "post") {
-      e.target.style.height = "auto";
-      e.target.style.height = e.target.scrollHeight + "px";
-      //Esto nos permite que el input del area de texto crezca conforme escribimos y cambiamos de renglon.
       setPostData({ ...postData, [e.target.name]: e.target.value });
     } else {
       setCommentData({
@@ -70,9 +71,10 @@ function Forum({ user }) {
         <h2 id="forum-header">Forum</h2>
         <div id="post-input">
           <form id="post-form" onSubmit={(e) => handleSubmit(e, "post")}>
-            <input
+            <textarea
               id="title-input"
               placeholder="Insert title of your post..."
+              rows={1}
               className="input-fields"
               name="title"
               onChange={(e) => handleChange(e, "post")}
@@ -116,8 +118,9 @@ function Forum({ user }) {
                     className="comment-form"
                     onSubmit={(e) => handleSubmit(e, "comment")}
                   >
-                    <input
+                    <textarea
                       placeholder="Write a comment..."
+                      rows={1}
                       className="comment-input"
                       name="content"
                       onChange={(e) => handleChange(e, "comment", post.id)}

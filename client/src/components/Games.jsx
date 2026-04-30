@@ -33,6 +33,7 @@ function Games({
   const mainEndpoint = `http://localhost:5000/`;
 
   useEffect(() => {
+    setLoading(true);
     setGames([]);
     setPage(1);
     setHasMore(true);

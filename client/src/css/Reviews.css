@@ -53,6 +53,10 @@
     margin: 2% 3%;
   }
 
+  #main-review-div {
+    text-align: center;
+  }
+
   #scroll-top {
     bottom: 20px;
     right: 20px;
